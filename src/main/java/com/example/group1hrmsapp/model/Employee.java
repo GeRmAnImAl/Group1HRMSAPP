@@ -49,6 +49,8 @@ public class Employee implements Serializable {
             joinColumns = {@JoinColumn(name = "id")},
             inverseJoinColumns = {@JoinColumn(name = "lastname")})
     private Manager manager;
+    @OneToOne(mappedBy = "employee")
+    private User user;
 
 
     public String getFirstName() {
