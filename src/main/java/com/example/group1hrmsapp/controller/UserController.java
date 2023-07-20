@@ -1,22 +1,23 @@
 package com.example.group1hrmsapp.controller;
 
 import com.example.group1hrmsapp.model.User;
-import com.example.group1hrmsapp.repository.UserRepository;
 import com.example.group1hrmsapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class UserController {
-    @Autowired
-    private UserRepository userRepository;
+
     @Autowired
     private UserService userService;
+
+    @GetMapping("/userList")
+    public String viewUserPage(Model model) {
+        model.addAttribute("listUsers", userService.getAllUsers());
+        return "user_list";
+    }
 
     @GetMapping("/showNewUserForm")
     public String showNewUserForm(Model model){
@@ -26,21 +27,21 @@ public class UserController {
     }
 
     @PostMapping("/saveUser")
-    public String saveUser(@ModelAttribute("user") User user){
+    public String saveUser(@ModelAttribute("user") User user) {
         userService.saveUser(user);
-        return "redirect:/";
+        return "redirect:/userList";
     }
 
-    @GetMapping("/deleteUser/{userName}")
-    public String deleteUser(@PathVariable(value = "userName") String userName){
-        this.userService.deleteUserById(userName);
-        return "redirect:/";
+    @GetMapping("/showUpdateUserForm/{id}")
+    public String showUpdateUserForm(@PathVariable(value = "id") long id, Model model){
+        User user = userService.getUserById(id);
+        model.addAttribute("user", user);
+        return "update_user";
     }
 
-    @GetMapping("/userLogin")
-    public String userLogin(@PathVariable(value = "userName") String userName){
-        User user = this.userService.getUserById(userName);
-
-        return "index";
+    @GetMapping("/deleteUser/{id}")
+    public String deleteUser(@PathVariable(value = "id") long id) {
+        this.userService.deleteUserById(id);
+        return "redirect:/userList";
     }
 }

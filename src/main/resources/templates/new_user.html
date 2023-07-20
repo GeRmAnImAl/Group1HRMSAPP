@@ -8,20 +8,20 @@
 </head>
 <body>
 <div class="container">
-  <h1>Student Management System </h1>
-  <h2> Save Student</h2>
+  <h1>Add Users </h1>
+
   <form action="#" th:action="@{/saveStudent}" th:object="${student}"
         method="POST">
 
-    <input type="text" th:field="*{studName}"
-           placeholder="Student Name" class="form-control mb-4 col-4">
+    <input type="text" th:field="*{userName}"
+           placeholder="User Name" class="form-control mb-4 col-4">
 
-    <input type="text" th:field="*{studEmail}"
+    <input type="text" th:field="*{userEmail}"
            placeholder="Student email" class="form-control mb-4 col-4">
 
 
 
-    <button type="submit" class="btn btn-info col-2"> Save Student</button>
+    <button type="submit" class="btn btn-info col-2"> Save</button>
   </form>
 </div>
 </body>
