@@ -36,4 +36,11 @@ public class UserController {
         this.userService.deleteUserById(userName);
         return "redirect:/";
     }
+
+    @GetMapping("/userLogin")
+    public String userLogin(@PathVariable(value = "userName") String userName){
+        User user = this.userService.getUserById(userName);
+
+        return "index";
+    }
 }

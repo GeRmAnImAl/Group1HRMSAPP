@@ -19,7 +19,7 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    @GetMapping("/employeelist")
+    @GetMapping("/employeeList")
     public String viewEmployeePage(Model model){
         model.addAttribute("listEmployees", employeeService.getAllEmployees());
         return "employee_list";
