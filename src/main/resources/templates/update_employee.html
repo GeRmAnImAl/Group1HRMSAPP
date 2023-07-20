@@ -2,15 +2,15 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="ISO-8859-1">
-  <title>Course Management System</title>
+  <title>Human Resource Management System</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
 </head>
 <body>
 <div class="container">
-  <h1>Course Management System</h1>
+  <h1>Human Resource Management System</h1>
   <hr>
-  <h2>Update Course</h2>
+  <h2>Update Employee</h2>
 
   <form action="#" th:action="@{/saveEmployee}" th:object="${employee}"
         method="POST">
@@ -69,7 +69,7 @@
 
   <hr>
 
-  <a th:href = "@{employee_list.html}"> Back to Employee List</a>
+  <button th:href = "@{/}"> Back to Employee List</button>
 </div>
 </body>
 </html>

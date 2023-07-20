@@ -9,7 +9,8 @@
 <body>
 <div class="container">
   <h1>Human Resource Management System</h1>
-  <h2>Save Employee</h2>
+  <hr>
+  <h2>Create New Employee</h2>
   <form action="#" th:action="@{/saveEmployee}" th:object="${employee}"
         method="POST">
     <input type="text" th:field="*{firstName}"
@@ -60,6 +61,7 @@
 
     <button type="submit" class="btn btn-info col-2"> Save Employee</button>
   </form>
+  <hr>
 </div>
 </body>
 </html>
