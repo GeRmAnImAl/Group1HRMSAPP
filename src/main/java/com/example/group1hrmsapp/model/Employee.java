@@ -18,7 +18,7 @@ public class Employee implements Serializable {
     @Column(name = "lastname")
     private String lastName;
     @Column(name = "dob")
-    private LocalDate dateOfBirth;
+    private String dateOfBirth;
     @Column(name = "gender")
     private String gender;
     @Column(name = "phone")
@@ -52,6 +52,21 @@ public class Employee implements Serializable {
     @OneToOne(mappedBy = "employee")
     private User user;
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -69,11 +84,11 @@ public class Employee implements Serializable {
         this.lastName = lastName;
     }
 
-    public LocalDate getDateOfBirth() {
+    public String getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
+    public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
