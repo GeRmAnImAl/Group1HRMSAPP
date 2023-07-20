@@ -8,4 +8,5 @@ public interface UserService {
     void deleteUserById(String userName);
 
     Object getAllUsers();
+    String generateJwtToken(String username);
 }
