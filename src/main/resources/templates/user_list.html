@@ -9,18 +9,18 @@
 <table border="1" class = "table table-striped table-responsive-md">
   <thead>
   <tr>
-    <th> User List</th>
-    <th>User Email</th>
+    <th>User List</th>
+    <th>User Password</th>
     <th>Actions</th>
   </tr>
   </thead>
   <tbody>
   <tr th:each="user : ${listUsers}">
-    <td th:text="${user.firstName}"></td>
-    <td th:text="${user.userEmail}"></td>
+    <td th:text="${user.userName}"></td>
+    <td th:text="${user.password}"></td>
     <td>
-      <a th:href="@{/showUserFormForUpdate/{id}(id=${user.sid})}" class="btn btn-primary">Update or Add Users</a>
-      <a th:href="@{/deleteUser/{id}(id=${user.sid})}" class="btn btn-danger">Delete</a>
+      <a th:href="@{/showUserFormForUpdate/{id}(id=${user.userName})}" class="btn btn-primary">Update or Add Users</a>
+      <a th:href="@{/deleteUser/{id}(id=${user.userName})}" class="btn btn-danger">Delete</a>
     </td>
   </tr>
   </tbody>
