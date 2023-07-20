@@ -180,4 +180,8 @@ public class Employee implements Serializable {
     public void setManager(Manager manager) {
         this.manager = manager;
     }
+
+    public String getFullName(){
+        return firstName + " " + lastName;
+    }
 }

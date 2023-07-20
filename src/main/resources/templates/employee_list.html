@@ -3,28 +3,36 @@
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Human Resource Management System</title>
 </head>
 <body>
+<div class="container my-2">
+    <a th:href = "@{/showNewEmployeeForm}" class="btn btn-primary btn-sm mb-3"> Add Employee </a>
+    <h1>Employee List</h1>
 <table border="1" class = "table table-striped table-responsive-md">
     <thead>
     <tr>
-        <th>Employee List</th>
+        <th>Employee ID</th>
+        <th>Employee Name</th>
         <th>Employee Email</th>
+        <th>Employee Department</th>
         <th>Actions</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="user : ${listEmployees}">
-        <td th:text="${employee.firstName}"></td>
+    <tr th:each="employee : ${listEmployees}">
+        <td th:text="${employee.id}"></td>
+        <td th:text="${employee.getFullName()}"></td>
         <td th:text="${employee.email}"></td>
+        <td th:text="${employee.department}"></td>
         <td>
-            <a th:href="@{/showUserFormForUpdate/{id}(id=${employee.sid})}" class="btn btn-primary">Update or Add Users</a>
-            <a th:href="@{/deleteUser/{id}(id=${employee.sid})}" class="btn btn-danger">Delete</a>
+            <a th:href="@{/showEmployeeFormForUpdate/{id}(id=${employee.id})}" class="btn btn-primary">Update or Add Employee</a>
+            <a th:href="@{/deleteEmployee/{id}(id=${employee.id})}" class="btn btn-danger">Delete</a>
         </td>
     </tr>
     </tbody>
 </table>
-<button th:href = "@{/}"> Back to User List</button>
+<button th:href = "@{/}"> Back to Employee List</button>
+</div>
 </body>
 </html>
