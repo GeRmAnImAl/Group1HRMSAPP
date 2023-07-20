@@ -12,24 +12,64 @@
   <hr>
   <h2>Update Course</h2>
 
-  <form action="#" th:action="@{/saveCourse}" th:object="${course}"
+  <form action="#" th:action="@{/saveEmployee}" th:object="${employee}"
         method="POST">
 
     <!-- Add hidden form field to handle update -->
     <input type="hidden" th:field="*{id}" />
 
-    <input type="text" th:field="*{courseDept}" class="form-control mb-4 col-4">
+    <input type="text" th:field="*{firstName}"
+           placeholder="Employee First Name" class="form-control mb-4 col-4">
 
-    <input type="text" th:field="*{courseNum}" class="form-control mb-4 col-4">
+    <input type="text" th:field="*{lastName}"
+           placeholder="Employee Last Name" class="form-control mb-4 col-4">
 
-    <input type="text" th:field="*{courseName}" class="form-control mb-4 col-4">
-    <input type="text" th:field="*{courseStuds}" class="form-control mb-4 col-4">
-    <button type="submit" class="btn btn-info col-2"> Update Course</button>
+    <input type="text" th:field="*{dateOfBirth}"
+           placeholder="Employee Date of Birth" class="form-control mb-4 col-4">
+
+    <input type="text" th:field="*{gender}"
+           placeholder="Employee Gender" class="form-control mb-4 col-4">
+
+    <input type="text" th:field="*{phoneNumber}"
+           placeholder="Employee Phone Number" class="form-control mb-4 col-4">
+
+    <input type="text" th:field="*{email}"
+           placeholder="Employee Email" class="form-control mb-4 col-4">
+
+    <input type="text" th:field="*{address}"
+           placeholder="Employee Address" class="form-control mb-4 col-4">
+
+    <input type="text" th:field="*{jobTitle}"
+           placeholder="Employee Job Title" class="form-control mb-4 col-4">
+
+    <input type="text" th:field="*{department}"
+           placeholder="Employee Department" class="form-control mb-4 col-4">
+
+    <input type="text" th:field="*{employmentType}"
+           placeholder="Employee Employment Type" class="form-control mb-4 col-4">
+
+    <input type="text" th:field="*{hourlyRate}"
+           placeholder="Employee HourlyRate" class="form-control mb-4 col-4">
+
+    <input type="text" th:field="*{vacationTime}"
+           placeholder="Employee Vacation Time Entitled" class="form-control mb-4 col-4">
+
+    <input type="text" th:field="*{sickTime}"
+           placeholder="Employee Sick Time Entitled" class="form-control mb-4 col-4">
+
+    <input type="text" th:field="*{paidTimeOff}"
+           placeholder="Employee Paid Time Off Entitled" class="form-control mb-4 col-4">
+
+    <input type="text" th:field="*{enrolledInBenefits}"
+           placeholder="Is Employee Enrolled In Benefits? (true for yes, false for no)" class="form-control mb-4 col-4">
+
+
+    <button type="submit" class="btn btn-info col-2"> Update Employee</button>
   </form>
 
   <hr>
 
-  <a th:href = "@{/}"> Back to Course List</a>
+  <a th:href = "@{employee_list.html}"> Back to Employee List</a>
 </div>
 </body>
 </html>
