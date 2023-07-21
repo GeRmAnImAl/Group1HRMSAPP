@@ -11,6 +11,7 @@ public class AppUser implements Serializable {
     private String userName;
     @Column(name = "password")
     private String password;
+    @Enumerated(value = EnumType.STRING)
     @Column(name = "access_level")
     private AccessLevel accessLevel;
 

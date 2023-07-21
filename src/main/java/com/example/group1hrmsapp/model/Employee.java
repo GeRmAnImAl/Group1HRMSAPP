@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class Employee implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @Column(name = "firstname")
     private String firstName;
     @Column(name = "lastname")
@@ -58,7 +58,7 @@ public class Employee implements Serializable {
      * Retrieves the ID of this Employee.
      * @return A long representing the ID of this Employee.
      */
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -66,7 +66,7 @@ public class Employee implements Serializable {
      * Sets the ID of this Employee.
      * @param id A long containing the ID to set for this Employee.
      */
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

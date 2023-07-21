@@ -38,7 +38,7 @@ public class EmployeeServiceImpl implements EmployeeService{
      * @return an Employee Object.
      */
     @Override
-    public Employee getEmployeeById(long id) {
+    public Employee getEmployeeById(Long id) {
         Optional<Employee> optional = employeeRepository.findById(id);
         Employee employee = null;
         if(optional.isPresent()){
@@ -64,7 +64,7 @@ public class EmployeeServiceImpl implements EmployeeService{
      * @param id Long representing the employee in the database.
      */
     @Override
-    public void deleteEmployeeById(long id) {
+    public void deleteEmployeeById(Long id) {
         this.employeeRepository.deleteById(id);
     }
 

@@ -21,7 +21,7 @@ public interface EmployeeService {
      * @param id Long representing the employee in the database.
      * @return an Employee Object.
      */
-    Employee getEmployeeById(long id);
+    Employee getEmployeeById(Long id);
 
     /**
      * Saves an Employee to the database.
@@ -33,7 +33,7 @@ public interface EmployeeService {
      * Deletes and Employee from the database.
      * @param id Long representing the employee in the database.
      */
-    void deleteEmployeeById(long id);
+    void deleteEmployeeById(Long id);
 
     /**
      * Retrieves a paginated list of Employees sorted by a specific field and direction.
