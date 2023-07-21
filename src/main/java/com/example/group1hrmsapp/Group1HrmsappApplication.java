@@ -14,5 +14,4 @@ public class Group1HrmsappApplication {
     public static void main(String[] args) {
         SpringApplication.run(Group1HrmsappApplication.class, args);
     }
-
 }
