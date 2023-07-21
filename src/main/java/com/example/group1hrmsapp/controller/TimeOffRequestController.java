@@ -75,20 +75,27 @@ public class TimeOffRequestController {
         return "redirect:/timeOffRequestList";
     }
 
-    @GetMapping("/requestPage/{pageNo}")
-    public String findPaginated(@PathVariable(value = "pageNo") int pageNo, @RequestParam("sortField") String sortField,
-                                @RequestParam("sortDir") String sortDir, Model model){
-        int pageSize = 5;
+    @GetMapping("/requestPage")
+    public String findPaginated(
+            @RequestParam(name = "pageNo", defaultValue = "1") int pageNo,
+            @RequestParam(name = "size", defaultValue = "10") int pageSize,
+            @RequestParam(name = "sortField", defaultValue = "requestDate") String sortField,
+            @RequestParam(name = "sortDir", defaultValue = "asc") String sortDir,
+            Model model
+    ) {
         Page<TimeOffRequest> page = timeOffRequestService.findPaginated(pageNo, pageSize, sortField, sortDir);
-        List<TimeOffRequest> listRequests = page.getContent();
+        List<TimeOffRequest> requests = page.getContent();
+        long totalItems = page.getTotalElements();
+        int totalPages = page.getTotalPages(); // Calculate total pages
 
         model.addAttribute("currentPage", pageNo);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("pageSize", pageSize);
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDir);
-        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
-        model.addAttribute("listRequests", listRequests);
+        model.addAttribute("totalItems", totalItems);
+        model.addAttribute("totalPages", totalPages);
+
+        model.addAttribute("requests", requests);
         return "time_off_request_list";
     }
 }

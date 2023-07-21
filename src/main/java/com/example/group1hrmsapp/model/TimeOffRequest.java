@@ -6,7 +6,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "time_off_requests")
-public class TimeOffRequest implements Serializable {
+public class TimeOffRequest implements Serializable, Subject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -27,6 +27,10 @@ public class TimeOffRequest implements Serializable {
     private TimeOffStatus timeOffStatus;
     @Column
     private double duration;
+
+    @Transient
+    private List<Observer> observers;
+
     @ManyToMany
     @JoinTable(name = "TimeOffRequest_Approver",
             joinColumns = @JoinColumn(name = "time_off_request_id"),
@@ -97,12 +101,39 @@ public class TimeOffRequest implements Serializable {
         this.duration = duration;
     }
 
+    @Override
+    public void registerObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update(this);
+        }
+    }
+
+    // call this method whenever there's an update to this request
+    public void requestUpdated() {
+        notifyObservers();
+    }
+
+
     public List<Manager> getApprovers() {
         return approvers;
     }
 
     public void setApprovers(List<Manager> approvers) {
         this.approvers = approvers;
+        this.observers.clear();
+        if(approvers != null){
+            observers.addAll(approvers);
+        }
     }
 }
 
