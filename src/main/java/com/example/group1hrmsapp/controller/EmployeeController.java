@@ -10,8 +10,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
+/**
+ * Controller class handling employee related HTTP requests.
+ */
 @Controller
 public class EmployeeController {
     @Autowired
@@ -19,12 +21,22 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
+    /**
+     * Handler for the GET request to get all employees.
+     * @param model the model to hold attributes for the view.
+     * @return the name of the view.
+     */
     @GetMapping("/employeeList")
     public String viewEmployeePage(Model model){
         model.addAttribute("listEmployees", employeeService.getAllEmployees());
         return "employee_list";
     }
 
+    /**
+     * Handler for the GET request to show form for a new employee.
+     * @param model the model to hold attributes for the view.
+     * @return the name of the view.
+     */
     @GetMapping("/showNewEmployeeForm")
     public String showNewEmployeeForm(Model model){
         Employee employee = new Employee();
@@ -32,12 +44,23 @@ public class EmployeeController {
         return "new_employee";
     }
 
+    /**
+     * Handler for the POST request to save a new employee.
+     * @param employee the employee to be saved.
+     * @return the redirect URL.
+     */
     @PostMapping("/saveEmployee")
     public String saveEmployee(@ModelAttribute("employee") Employee employee){
         employeeService.saveEmployee(employee);
         return "redirect:/employeeList";
     }
 
+    /**
+     * Handler for the GET request to show form for updating an employee.
+     * @param id the ID of the employee to be updated.
+     * @param model the model to hold attributes for the view.
+     * @return the name of the view.
+     */
     @GetMapping("/showUpdateEmployeeForm/{id}")
     public String showUpdateEmployeeForm(@PathVariable(value = "id") long id, Model model){
         Employee employee = employeeService.getEmployeeById(id);
@@ -46,12 +69,25 @@ public class EmployeeController {
         return "update_employee";
     }
 
+    /**
+     * Handler for the GET request to delete an employee.
+     * @param id the ID of the employee to be deleted.
+     * @return the redirect URL.
+     */
     @GetMapping("/deleteEmployee/{id}")
     public String deleteEmployee(@PathVariable(value = "id") long id){
         this.employeeService.deleteEmployeeById(id);
         return "redirect:/employeeList";
     }
 
+    /**
+     * Handler for the GET request to get a paginated list of employees.
+     * @param pageNo the page number.
+     * @param sortField the field to sort by.
+     * @param sortDir the sort direction.
+     * @param model the model to hold attributes for the view.
+     * @return the name of the view.
+     */
     @GetMapping("/page/{pageNo}")
     public String findPaginated(@PathVariable(value = "pageNo") int pageNo, @RequestParam("sortField") String sortField,
                                 @RequestParam("sortDir") String sortDir, Model model){
