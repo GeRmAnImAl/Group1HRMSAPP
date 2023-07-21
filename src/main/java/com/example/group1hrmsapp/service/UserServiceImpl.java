@@ -1,6 +1,6 @@
 package com.example.group1hrmsapp.service;
 
-import com.example.group1hrmsapp.model.User;
+import com.example.group1hrmsapp.model.AppUser;
 import com.example.group1hrmsapp.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -16,21 +16,21 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private UserRepository userRepository;
     @Override
-    public User getUserById(String userName) {
-        Optional<User> optional = userRepository.findById(userName);
-        User user = null;
+    public AppUser getUserById(String userName) {
+        Optional<AppUser> optional = userRepository.findById(userName);
+        AppUser appUser = null;
         if(optional.isPresent()){
-            user = optional.get();
+            appUser = optional.get();
         }
         else{
             throw new RuntimeException("Username '" + userName + "' not found.");
         }
-        return user;
+        return appUser;
     }
 
     @Override
-    public void saveUser(User user) {
-        this.userRepository.save(user);
+    public void saveUser(AppUser appUser) {
+        this.userRepository.save(appUser);
     }
 
     @Override

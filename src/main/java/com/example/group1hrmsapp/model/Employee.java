@@ -1,9 +1,8 @@
 package com.example.group1hrmsapp.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -50,7 +49,7 @@ public class Employee implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "lastname")})
     private Manager manager;
     @OneToOne(mappedBy = "employee")
-    private User user;
+    private AppUser appUser;
 
     public long getId() {
         return id;
@@ -60,12 +59,12 @@ public class Employee implements Serializable {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public AppUser getUser() {
+        return appUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(AppUser appUser) {
+        this.appUser = appUser;
     }
 
     public String getFirstName() {

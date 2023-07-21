@@ -1,13 +1,13 @@
 package com.example.group1hrmsapp.repository;
 
-import com.example.group1hrmsapp.model.User;
+import com.example.group1hrmsapp.model.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, String> {
+public interface UserRepository extends JpaRepository<AppUser, String> {
     @Override
-    Optional<User> findById(String userName);
+    Optional<AppUser> findById(String userName);
 }

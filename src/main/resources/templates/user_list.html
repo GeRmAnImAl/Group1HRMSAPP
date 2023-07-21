@@ -18,12 +18,12 @@
   </tr>
   </thead>
   <tbody>
-  <tr th:each="user : ${listUsers}">
-    <td th:text="${user.userName}"></td>
-    <td th:text="${user.password}"></td>
+  <tr th:each="appUser : ${listUsers}">
+    <td th:text="${appUser.userName}"></td>
+    <td th:text="${appUser.password}"></td>
     <td>
-      <a th:href="@{/showUserFormForUpdate/{id}(id=${user.userName})}" class="btn btn-primary">Update or Add User</a>
-      <a th:href="@{/deleteUser/{id}(id=${user.userName})}" class="btn btn-danger">Delete</a>
+      <a th:href="@{/showUserFormForUpdate/{id}(id=${appUser.userName})}" class="btn btn-primary">Update or Add User</a>
+      <a th:href="@{/deleteUser/{id}(id=${appUser.userName})}" class="btn btn-danger">Delete</a>
     </td>
   </tr>
   </tbody>

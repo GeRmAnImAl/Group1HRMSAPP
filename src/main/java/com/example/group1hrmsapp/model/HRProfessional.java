@@ -1,6 +1,6 @@
 package com.example.group1hrmsapp.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 import java.io.Serializable;
 
@@ -20,8 +20,3 @@ public class HRProfessional extends Employee implements Serializable {
     }
 }
 
-enum AccessLevel{
-    LOW,
-    MEDIUM,
-    HIGH
-}

@@ -1,10 +1,10 @@
 package com.example.group1hrmsapp.service;
 
-import com.example.group1hrmsapp.model.User;
+import com.example.group1hrmsapp.model.AppUser;
 
 public interface UserService {
-    User getUserById(String userName);
-    void saveUser(User user);
+    AppUser getUserById(String userName);
+    void saveUser(AppUser appUser);
     void deleteUserById(String userName);
 
     Object getAllUsers();

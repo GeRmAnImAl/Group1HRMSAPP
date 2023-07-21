@@ -1,6 +1,6 @@
 package com.example.group1hrmsapp.controller;
 
-import com.example.group1hrmsapp.model.User;
+import com.example.group1hrmsapp.model.AppUser;
 import com.example.group1hrmsapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,21 +23,21 @@ public class UserController {
 
     @GetMapping("/showNewUserForm")
     public String showNewUserForm(Model model){
-        User user = new User();
-        model.addAttribute("user", user);
+        AppUser appUser = new AppUser();
+        model.addAttribute("user", appUser);
         return "new_user";
     }
 
     @PostMapping("/saveUser")
-    public String saveUser(@ModelAttribute("user") User user) {
-        userService.saveUser(user);
+    public String saveUser(@ModelAttribute("user") AppUser appUser) {
+        userService.saveUser(appUser);
         return "redirect:/userList";
     }
 
     @GetMapping("/showUpdateUserForm/{id}")
     public String showUpdateUserForm(@PathVariable(value = "id") String id, Model model){
-        User user = userService.getUserById(id);
-        model.addAttribute("user", user);
+        AppUser appUser = userService.getUserById(id);
+        model.addAttribute("user", appUser);
         return "update_user";
     }
 
@@ -49,14 +49,14 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestParam("userName") String userName, @RequestParam("password") String password){
-        User user = userService.getUserById(userName);
-        if(user == null){
+        AppUser appUser = userService.getUserById(userName);
+        if(appUser == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         }
-        if(!password.equals(user.getPassword())){
+        if(!password.equals(appUser.getPassword())){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Password");
         }
-        String token = userService.generateJwtToken(user.getUserName());
+        String token = userService.generateJwtToken(appUser.getUserName());
         return ResponseEntity.ok(token);
     }
 }

@@ -10,7 +10,7 @@
 <div class="container">
   <h1>Add User</h1>
 
-  <form action="#" th:action="@{/saveUser}" th:object="${user}"
+  <form action="#" th:action="@{/saveUser}" th:object="${appUser}"
         method="POST">
 
     <input type="text" th:field="*{userName}"

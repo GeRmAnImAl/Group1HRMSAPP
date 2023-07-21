@@ -1,12 +1,12 @@
 package com.example.group1hrmsapp.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 import java.io.Serializable;
 
 @Entity
 @Table(name = "users")
-public class User implements Serializable {
+public class AppUser implements Serializable {
     @Id
     private String userName;
     @Column(name = "password")
