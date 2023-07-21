@@ -1,0 +1,6 @@
+com.example.group1hrmsapp
+com.example.group1hrmsapp.controller
+com.example.group1hrmsapp.model
+com.example.group1hrmsapp.repository
+com.example.group1hrmsapp.security
+com.example.group1hrmsapp.service
