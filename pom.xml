@@ -14,7 +14,7 @@
     <name>Group1HRMSAPP</name>
     <description>Group1HRMSAPP</description>
     <properties>
-        <java.version>17</java.version>
+        <java.version>11</java.version>
     </properties>
     <dependencies>
         <dependency>
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.18</version>
+            <version>8.0.28</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
