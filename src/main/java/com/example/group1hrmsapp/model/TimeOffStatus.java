@@ -4,5 +4,5 @@ public enum TimeOffStatus {
     PENDING,
     APPROVED,
     REJECTED,
-    CANCELED
+    CANCELLED
 }
