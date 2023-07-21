@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+  <meta charset="UTF-8">
+  <title>Human Resource Management System</title>
+</head>
+<body>
+<div class="container my-2">
+  <a th:href = "@{/}"> Back to Home</a>
+  <h1>Time Off Request List</h1>
+  <table border="1" class = "table table-striped table-responsive-md">
+    <thead>
+    <tr>
+      <th>Request ID</th>
+      <th>Employee Name</th>
+      <th>Request Date</th>
+      <th>Start Date</th>
+      <th>End Date</th>
+      <th>Duration</th>
+      <th>Request Type</th>
+      <th>Approver(s)</th>
+      <th>Request Status</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="request: ${listTimeOffRequests}">
+      <td th:text="${request.id}"></td>
+      <td th:text="${request.employee.getFullName()}"></td>
+      <td th:text="${request.requestDate}"></td>
+      <td th:text="${request.startDate}"></td>
+      <td th:text="${request.endDate}"></td>
+      <td th:text="${request.duration}"></td>
+      <td th:text="${request.timeOffType}"></td>
+      <!-- Check if there are any approvers -->
+      <td th:if="${#lists.isEmpty(request.approvers)}">N/A</td> <!-- If there are no approvers -->
+      <td th:if="${!#lists.isEmpty(request.approvers)}" th:text="${request.approvers}"></td> <!-- If there are approvers -->
+      <td th:text="${request.timeOffStatus}"></td>
+      <td>
+        <a th:if="${!#lists.isEmpty(request.approvers)}" th:href="@{/approve/{requestId}/{managerId}(requestId=${request.id}, managerId=${request.getApprovers().get(0).getId()})}" class="btn btn-primary">Approve</a>
+        <a th:if="${!#lists.isEmpty(request.approvers)}" th:href="@{/reject/{requestId}/{managerId}(requestId=${request.id}, managerId=${request.getApprovers().get(0).getId()})}" class="btn btn-danger">Reject</a>
+        <a th:href="@{/cancelRequest/{requestId}(requestId=${request.id})}" class="btn btn-danger">Cancel</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <a th:href = "@{/showTimeOffRequestForm}" class="btn btn-primary btn-sm mb-3"> Create Request </a>
+</div>
+</body>
+</html>

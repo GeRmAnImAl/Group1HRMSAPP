@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -25,21 +26,24 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    public TimeOffRequest createTimeOffRequest(Long employeeId, List<Long> approverIds, TimeOffRequest request) {
-        Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new NoSuchElementException("Employee not found"));
+    @Override
+    public List<TimeOffRequest> getAllTimeOffRequests() {
+        return timeOffRequestRepository.findAll();
+    }
 
-        List<Manager> approvers = employeeRepository.findAllById(approverIds)
-                .stream()
-                .filter(e -> "Manager".equals(e.getSpecialType()))
-                .map(e -> (Manager) e)
-                .collect(Collectors.toList());
+    public void createTimeOffRequest(TimeOffRequest timeOffRequest) {
+        Employee employee = employeeRepository.findById(timeOffRequest.getEmployee().getId()).orElseThrow(() -> new NoSuchElementException("Employee not found"));
 
-        request.setEmployee(employee);
-        request.setApprovers(approvers);
-        request.setTimeOffStatus(TimeOffStatus.PENDING);
+        Manager approver = employee.getManager();
+        List<Manager> approvers = new ArrayList<>();
+        approvers.add(approver);
+
+        timeOffRequest.setEmployee(employee);
+        timeOffRequest.setApprovers(approvers);
+        timeOffRequest.setTimeOffStatus(TimeOffStatus.PENDING);
 
         // Save the time off request
-        return timeOffRequestRepository.save(request);
+        timeOffRequestRepository.save(timeOffRequest);
     }
 
     public TimeOffRequest cancelTimeOffRequest(Long requestId) {

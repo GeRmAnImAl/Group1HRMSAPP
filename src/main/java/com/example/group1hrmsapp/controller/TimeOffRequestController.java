@@ -1,55 +1,94 @@
 package com.example.group1hrmsapp.controller;
 
+import com.example.group1hrmsapp.model.Employee;
 import com.example.group1hrmsapp.model.TimeOffRequest;
+import com.example.group1hrmsapp.service.EmployeeService;
 import com.example.group1hrmsapp.service.TimeOffRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.beans.PropertyEditorSupport;
 import java.util.List;
 
 @Controller
-@RequestMapping("/time-off-requests")
 public class TimeOffRequestController {
 
     @Autowired
     private TimeOffRequestService timeOffRequestService;
+    @Autowired
+    private EmployeeService employeeService;
 
-    @PostMapping("/employees/{employeeId}")
-    public String createTimeOffRequest(@PathVariable Long employeeId,
-                                       @ModelAttribute List<Long> approverIds,
-                                       TimeOffRequest request, Model model) {
-        model.addAttribute("request", timeOffRequestService.createTimeOffRequest(employeeId, approverIds, request));
-        return "timeOffRequestDetails";
+    @GetMapping("/timeOffRequestList")
+    public String viewTimeOffRequestPage(Model model){
+        model.addAttribute("listTimeOffRequests", timeOffRequestService.getAllTimeOffRequests());
+        return "time_off_request_list";
     }
 
-    @PostMapping("/{requestId}/cancel")
+    @GetMapping("/showTimeOffRequestForm")
+    public String createTimeOffRequest(Model model) {
+        TimeOffRequest timeOffRequest = new TimeOffRequest();
+        model.addAttribute("request", timeOffRequest);
+        List<Employee> employees = employeeService.getAllEmployees();
+        model.addAttribute("employees", employees);
+        return "new_time_off_request";
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(Employee.class, "employee", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                Employee employee = employeeService.getEmployeeById(Long.valueOf(text));
+                setValue(employee);
+            }
+        });
+    }
+
+    @PostMapping("/saveRequest")
+    public String saveTimeOffRequest(@ModelAttribute("request") TimeOffRequest request){
+        if (request.getApprovers().isEmpty()) {
+            request.setApprovers(null);
+        }
+        timeOffRequestService.createTimeOffRequest(request);
+        return "redirect:/timeOffRequestList";
+    }
+
+    @PostMapping("/cancelRequest/{requestId}")
     public String cancelTimeOffRequest(@PathVariable Long requestId, Model model) {
         model.addAttribute("request", timeOffRequestService.cancelTimeOffRequest(requestId));
-        return "timeOffRequestDetails";
+        return "redirect:/timeOffRequestList";
     }
 
-    @PostMapping("/{requestId}/approve/{managerId}")
+    @PostMapping("/approve/{requestId}/{managerId}")
     public String approveTimeOffRequest(@PathVariable Long requestId, @PathVariable Long managerId, Model model) {
         model.addAttribute("request", timeOffRequestService.approveTimeOffRequest(requestId, managerId));
-        return "timeOffRequestDetails";
+        return "redirect:/timeOffRequestList";
     }
 
-    @PostMapping("/{requestId}/reject/{managerId}")
+    @PostMapping("/reject/{requestId}/{managerId}")
     public String rejectTimeOffRequest(@PathVariable Long requestId, @PathVariable Long managerId, Model model) {
         model.addAttribute("request", timeOffRequestService.rejectTimeOffRequest(requestId, managerId));
-        return "timeOffRequestDetails";
+        return "redirect:/timeOffRequestList";
     }
 
-    @GetMapping("/{pageNo}/{pageSize}/{sortField}/{sortDirection}")
-    public String findPaginated(@PathVariable int pageNo,
-                                @PathVariable int pageSize,
-                                @PathVariable String sortField,
-                                @PathVariable String sortDirection, Model model) {
-        Page<TimeOffRequest> page = timeOffRequestService.findPaginated(pageNo, pageSize, sortField, sortDirection);
-        model.addAttribute("page", page);
-        return "timeOffRequestsList";
+    @GetMapping("/requestPage/{pageNo}")
+    public String findPaginated(@PathVariable(value = "pageNo") int pageNo, @RequestParam("sortField") String sortField,
+                                @RequestParam("sortDir") String sortDir, Model model){
+        int pageSize = 5;
+        Page<TimeOffRequest> page = timeOffRequestService.findPaginated(pageNo, pageSize, sortField, sortDir);
+        List<TimeOffRequest> listRequests = page.getContent();
+
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+        model.addAttribute("listRequests", listRequests);
+        return "time_off_request_list";
     }
 }
