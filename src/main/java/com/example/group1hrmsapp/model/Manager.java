@@ -12,7 +12,7 @@ import java.util.Set;
  */
 @Entity
 @DiscriminatorValue(value = "MANAGER")
-public class Manager extends Employee implements Serializable {
+public class Manager extends Employee implements Serializable, Observer {
     @OneToMany(mappedBy = "manager")
     private Set<Employee> subordinates = new HashSet<>();
 
@@ -30,5 +30,11 @@ public class Manager extends Employee implements Serializable {
      */
     public void setSubordinates(Set<Employee> subordinates) {
         this.subordinates = subordinates;
+    }
+
+    @Override
+    public void update(TimeOffRequest timeOffRequest) {
+        // Implement logic to notify manager about request
+        System.out.println("Manager " + getId() + " notified about request: " + timeOffRequest.getId());
     }
 }

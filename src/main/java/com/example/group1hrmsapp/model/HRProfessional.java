@@ -11,7 +11,7 @@ import java.io.Serializable;
 @DiscriminatorValue(value = "HR")
 public class HRProfessional extends Employee implements Serializable {
     @Column(name = "access_level")
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private AccessLevel accessLevel;
 
     /**
