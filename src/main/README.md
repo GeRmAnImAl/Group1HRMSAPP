@@ -34,4 +34,19 @@ TimeOffRequestService, TimeOffRequestServiceImpl, and time_off_request_list.html
 
 ## Nish Barot
 
+Human Resource Management System - Update
+This update introduces:
+
+Observer OOP Design Pattern: Applied using Employee and Manager classes. Made changes in both classes and implemented two interfaces, Observer and Subject.
+
+Comprehensive Employee Detail View: Displayed on employeeDetail.html, it shows detailed information about each employee, including name, email, job title, and more.
+
+Search Filters User Interface Pattern: Implemented in the employee list view for better navigation and usability. Made necessary changes in EmployeeController, EmployeeRepository, EmployeeService, EmployeeServiceImpl, and employeeList.html.
+
+The objective of these changes is to enhance the usability and extend the functionality of the Human Resource Management System.
+
+
+
+
+
 ## Ritvik Kothapalli
