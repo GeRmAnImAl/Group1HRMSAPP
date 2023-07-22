@@ -17,3 +17,21 @@ Our first usecase is CRUD functionality for Employee Recrods.
 You will be able to add, modify, and delete Employees. The data is stored in a database
 
 hosted on AWS so there is no need to create an instance on your own machine.
+
+# Implement Two Patterns
+## AJ Germani
+I chose to implement the Observer OOP Design Pattern using the Manager and TimeOffRequest
+
+classes. I made changes to both of those classes as well as implemented two interfaces, Observer
+
+and Subject.
+
+I also chose to implement the Search Filters User Interface Pattern for the time_off_request_list.html.
+
+Implementation of this pattern occured in the TimeOffRequestController, TimeOffRequestRepository,
+
+TimeOffRequestService, TimeOffRequestServiceImpl, and time_off_request_list.html.
+
+## Nish Barot
+
+## Ritvik Kothapalli

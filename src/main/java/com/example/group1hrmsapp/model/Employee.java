@@ -349,4 +349,9 @@ public class Employee implements Serializable {
     public String getFullName(){
         return firstName + " " + lastName;
     }
+
+    @Transient
+    public String getSpecialType() {
+        return this.getClass().getSimpleName();
+    }
 }
