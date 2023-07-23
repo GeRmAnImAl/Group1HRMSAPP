@@ -60,7 +60,7 @@ public class EmployeeServiceImpl implements EmployeeService{
     }
 
     /**
-     * Deletes and Employee from the database.
+     * Deletes an Employee from the database.
      * @param id Long representing the employee in the database.
      */
     @Override

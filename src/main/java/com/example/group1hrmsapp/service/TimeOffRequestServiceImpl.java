@@ -19,6 +19,9 @@ import java.util.NoSuchElementException;
 import javax.persistence.criteria.Predicate;
 import java.util.stream.Collectors;
 
+/**
+ * Service class for managing TimeOffRequests.
+ */
 @Service
 public class TimeOffRequestServiceImpl implements TimeOffRequestService{
     @Autowired
@@ -27,11 +30,19 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    /**
+     * Retrieve all TimeOffRequests
+     * @return List of TimeOffRequests
+     */
     @Override
     public List<TimeOffRequest> getAllTimeOffRequests() {
         return timeOffRequestRepository.findAll();
     }
 
+    /**
+     * Create a new TimeOffRequest
+     * @param timeOffRequest to be created
+     */
     public void createTimeOffRequest(TimeOffRequest timeOffRequest) {
         Employee employee = employeeRepository.findById(timeOffRequest.getEmployee().getId()).orElseThrow(() -> new NoSuchElementException("Employee not found"));
 
@@ -47,6 +58,11 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
         timeOffRequestRepository.save(timeOffRequest);
     }
 
+    /**
+     * Cancel a TimeOffRequest
+     * @param requestId of the request to be cancelled
+     * @return Cancelled TimeOffRequest
+     */
     public TimeOffRequest cancelTimeOffRequest(Long requestId) {
         TimeOffRequest request = timeOffRequestRepository.findById(requestId).orElseThrow(() -> new NoSuchElementException("TimeOffRequest not found"));
 
@@ -55,6 +71,12 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
         return timeOffRequestRepository.save(request);
     }
 
+    /**
+     * Approve a TimeOffRequest
+     * @param requestId of the request to be approved
+     * @param managerId of the manager approving the request
+     * @return Approved TimeOffRequest
+     */
     public TimeOffRequest approveTimeOffRequest(Long requestId, Long managerId) {
         TimeOffRequest request = timeOffRequestRepository.findById(requestId).orElseThrow(() -> new NoSuchElementException("TimeOffRequest not found"));
 
@@ -73,6 +95,12 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
         return timeOffRequestRepository.save(request);
     }
 
+    /**
+     * Reject a TimeOffRequest
+     * @param requestId of the request to be rejected
+     * @param managerId of the manager rejecting the request
+     * @return Rejected TimeOffRequest
+     */
     public TimeOffRequest rejectTimeOffRequest(Long requestId, Long managerId) {
         TimeOffRequest request = timeOffRequestRepository.findById(requestId).orElseThrow(() -> new NoSuchElementException ("TimeOffRequest not found"));
 
@@ -91,6 +119,14 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
         return timeOffRequestRepository.save(request);
     }
 
+    /**
+     * Get paginated TimeOffRequests
+     * @param pageNo current page number
+     * @param pageSize number of records per page
+     * @param sortField field to be sorted by
+     * @param sortDirection direction of sort
+     * @return Paginated TimeOffRequests
+     */
     @Override
     public Page<TimeOffRequest> findPaginated(int pageNo, int pageSize, String sortField, String sortDirection) {
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() : Sort.by(sortField).descending();
@@ -98,11 +134,25 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
         return timeOffRequestRepository.findAll(pageable);
     }
 
+    /**
+     * Find TimeOffRequests with provided filters and paginate them
+     * @param spec specification for the filtering of requests
+     * @param pageable pagination details
+     * @return Paginated and filtered TimeOffRequests
+     */
     @Override
     public Page<TimeOffRequest> findFilteredAndPaginated(Specification<TimeOffRequest> spec, Pageable pageable) {
         return timeOffRequestRepository.findAll(spec, pageable);
     }
 
+    /**
+     * Prepare a Specification for TimeOffRequests using provided filters
+     * @param startDate beginning of the date range
+     * @param endDate end of the date range
+     * @param timeOffType type of time off
+     * @param timeOffStatus status of time off
+     * @return Prepared Specification
+     */
     public Specification<TimeOffRequest> prepareSpecification(String startDate, String endDate, String timeOffType, String timeOffStatus) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
