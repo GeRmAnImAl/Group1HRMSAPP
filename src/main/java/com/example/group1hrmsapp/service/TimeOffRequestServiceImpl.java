@@ -11,13 +11,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Predicate;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import javax.persistence.criteria.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * Service class for managing TimeOffRequests.

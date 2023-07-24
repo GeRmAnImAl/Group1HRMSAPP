@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.example.group1hrmsapp"},{"l":"com.example.group1hrmsapp.controller"},{"l":"com.example.group1hrmsapp.model"},{"l":"com.example.group1hrmsapp.repository"},{"l":"com.example.group1hrmsapp.security"},{"l":"com.example.group1hrmsapp.service"}];updateSearchResults();
