@@ -51,6 +51,7 @@ public class EmployeeController {
      */
     @PostMapping("/saveEmployee")
     public String saveEmployee(@ModelAttribute("employee") Employee employee){
+        System.out.println("Special Type in Controller: " + employee.getSpecialType());
         employeeService.saveEmployee(employee);
         return "redirect:/employeeList";
     }

@@ -13,6 +13,13 @@
   <h2>Create New Employee</h2>
   <form action="#" th:action="@{/saveEmployee}" th:object="${employee}"
         method="POST">
+
+    <label>Special Type:</label>
+    <select th:field="*{specialType}" class="form-control mb-4 col-4" required>
+      <option th:each="type : ${T(com.example.group1hrmsapp.model.SpecialType).values()}"
+              th:value="${type.name()}" th:text="${type}" th:selected="${type == employee.specialType}"></option>
+    </select>
+
     <input type="text" th:field="*{firstName}"
            placeholder="Employee First Name" class="form-control mb-4 col-4" required>
 

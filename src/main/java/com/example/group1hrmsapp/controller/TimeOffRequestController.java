@@ -12,6 +12,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.beans.PropertyEditorSupport;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -51,7 +52,9 @@ public class TimeOffRequestController {
     @PostMapping("/saveRequest")
     public String saveTimeOffRequest(@ModelAttribute("request") TimeOffRequest request){
         if (request.getApprovers().isEmpty()) {
-            request.setApprovers(null);
+            List<Employee> approvers = new ArrayList<>();
+            approvers.add(employeeService.getEmployeeById(request.getEmployee().getManager()));
+            request.setApprovers(approvers);
         }
         timeOffRequestService.createTimeOffRequest(request);
         return "redirect:/timeOffRequestList";

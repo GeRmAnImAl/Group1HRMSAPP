@@ -19,6 +19,26 @@
     <!-- Add hidden form field to handle update -->
     <input type="hidden" th:field="*{id}" />
 
+    <div class="form-check">
+      <input class="form-check-input" type="radio" th:field="*{specialType}" value="EMPLOYEE" id="employee">
+      <label class="form-check-label" for="employee">
+        Employee
+      </label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" th:field="*{specialType}" value="MANAGER" id="manager">
+      <label class="form-check-label" for="manager">
+        Manager
+      </label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" th:field="*{specialType}" value="HR" id="hr">
+      <label class="form-check-label" for="hr">
+        HR
+      </label>
+    </div>
+
+
     <input type="text" th:field="*{firstName}"
            placeholder="Employee First Name" class="form-control mb-4 col-4">
 

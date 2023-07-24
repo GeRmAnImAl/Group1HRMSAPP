@@ -17,6 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /**
  * Service class for managing TimeOffRequests.
@@ -43,17 +44,20 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
      * @param timeOffRequest to be created
      */
     public void createTimeOffRequest(TimeOffRequest timeOffRequest) {
-        Employee employee = employeeRepository.findById(timeOffRequest.getEmployee().getId()).orElseThrow(() -> new NoSuchElementException("Employee not found"));
+        Employee employee = employeeRepository.findById(timeOffRequest.getEmployee().getId())
+                .orElseThrow(() -> new NoSuchElementException("Employee not found"));
 
-        Manager approver = employee.getManager();
-        List<Manager> approvers = new ArrayList<>();
+        Employee approver = employeeRepository.findById(employee.getManager())
+                .orElseThrow(() -> new NoSuchElementException("Approver not found"));
+
+        List<Employee> approvers = new ArrayList<>();
         approvers.add(approver);
 
         timeOffRequest.setEmployee(employee);
         timeOffRequest.setApprovers(approvers);
         timeOffRequest.setTimeOffStatus(TimeOffStatus.PENDING);
+        timeOffRequest.registerObserver(approver);
 
-        // Save the time off request
         timeOffRequestRepository.save(timeOffRequest);
     }
 

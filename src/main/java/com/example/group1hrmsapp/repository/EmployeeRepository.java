@@ -29,7 +29,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
      * @param specialType The specific type of employee to find in the database. This corresponds to the 'special_type' column in the 'employees' table.
      * @return A list of Employee objects that match the specified special type. Returns an empty list if no such employees are found.
      */
-    @Query(value = "SELECT * FROM employees WHERE special_type = :specialType", nativeQuery = true)
-    List<Employee> findBySpecialType(@Param("specialType") String specialType);
+    /*@Query(value = "SELECT * FROM employees WHERE special_type = :specialType", nativeQuery = true)
+    List<Employee> findBySpecialType(@Param("specialType") String specialType);*/
 
 }

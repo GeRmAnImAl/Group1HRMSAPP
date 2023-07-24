@@ -63,6 +63,7 @@ public class EmployeeServiceImpl implements EmployeeService{
      */
     @Override
     public void saveEmployee(Employee employee) {
+        System.out.println("Special Type in Service: " + employee.getSpecialType());
         this.employeeRepository.save(employee);
 
         // Dynamically create and save login information for the new employee. The username will be firstName.lastName,

@@ -3,15 +3,15 @@ package com.example.group1hrmsapp.model;
 import javax.persistence.*;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The Employee class represents an employee in the HRMS application.
  */
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "special_type", discriminatorType = DiscriminatorType.STRING)
 @Table(name="employees")
-public class Employee implements Serializable {
+public class Employee implements Serializable, Observer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -45,12 +45,17 @@ public class Employee implements Serializable {
     private double paidTimeOff;
     @Column(name = "enrolled")
     private boolean enrolledInBenefits;
+    @Column
+    private Long managerId;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "special_type")
+    private SpecialType specialType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "access_level")
+    private AccessLevel accessLevel;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinTable(name = "employee_manager",
-            joinColumns = {@JoinColumn(name = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "lastname")})
-    private Manager manager;
+    @OneToMany(mappedBy = "managerId")
+    private Set<Employee> subordinates = new HashSet<>();
     @OneToOne(mappedBy = "employee")
     private AppUser appUser;
 
@@ -330,16 +335,16 @@ public class Employee implements Serializable {
      * Retrieves the Manager of this Employee.
      * @return The Manager of this Employee.
      */
-    public Manager getManager() {
-        return manager;
+    public Long getManager() {
+        return managerId;
     }
 
     /**
      * Sets the Manager for this Employee.
      * @param manager The Manager to set for this Employee.
      */
-    public void setManager(Manager manager) {
-        this.manager = manager;
+    public void setManager(Long manager) {
+        this.managerId = manager;
     }
 
     /**
@@ -350,8 +355,54 @@ public class Employee implements Serializable {
         return firstName + " " + lastName;
     }
 
+    /**
+     * Retrieves the special type of this Employee.
+     * @return A String representing the special type of this Employee (e.g., "EMPLOYEE", "MANAGER", "HR").
+     */
     @Transient
     public String getSpecialType() {
         return this.getClass().getSimpleName();
+    }
+
+    /**
+     * Retrieves the access level of this HR professional.
+     * @return The access level of this HR professional.
+     */
+    public AccessLevel getAccessLevel() {
+        return accessLevel;
+    }
+
+    /**
+     * Sets the access level of this HR professional.
+     * @param accessLevel The access level to be set.
+     */
+    public void setAccessLevel(AccessLevel accessLevel) {
+        this.accessLevel = accessLevel;
+    }
+
+    /**
+     * Retrieves the Employees that this Manager manages.
+     * @return A Set of Employees that are managed by this Manager.
+     */
+    public Set<Employee> getSubordinates() {
+        return subordinates;
+    }
+
+    /**
+     * Sets the Employees that this Manager manages.
+     * @param subordinates A Set of Employees that this Manager should manage.
+     */
+    public void setSubordinates(Set<Employee> subordinates) {
+        this.subordinates = subordinates;
+    }
+
+    /**
+     * This method is implemented from the Observer interface to receive updates about time-off requests.
+     * @param timeOffRequest The time-off request to notify the manager about.
+     */
+    @Override
+    public void update(TimeOffRequest timeOffRequest) {
+        // Implement logic to notify manager about request
+        System.out.println("Manager " + getId() + " notified about request: " + timeOffRequest.getId());
     }
 }

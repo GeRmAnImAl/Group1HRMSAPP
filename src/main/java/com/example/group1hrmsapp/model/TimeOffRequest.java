@@ -2,6 +2,7 @@ package com.example.group1hrmsapp.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,7 +40,7 @@ public class TimeOffRequest implements Serializable, Subject {
     @JoinTable(name = "TimeOffRequest_Approver",
             joinColumns = @JoinColumn(name = "time_off_request_id"),
             inverseJoinColumns = @JoinColumn(name = "approver_id"))
-    private List<Manager> approvers;
+    private List<Employee> approvers = new ArrayList<>();
 
     /**
      * Gets the id of this TimeOffRequest.
@@ -208,7 +209,7 @@ public class TimeOffRequest implements Serializable, Subject {
      * Gets the List of Managers who can approve this TimeOffRequest.
      * @return The List of Managers who can approve this TimeOffRequest.
      */
-    public List<Manager> getApprovers() {
+    public List<Employee> getApprovers() {
         return approvers;
     }
 
@@ -216,7 +217,7 @@ public class TimeOffRequest implements Serializable, Subject {
      * Sets the List of Managers who can approve this TimeOffRequest and also adds them as Observers.
      * @param approvers The List of Managers to set.
      */
-    public void setApprovers(List<Manager> approvers) {
+    public void setApprovers(List<Employee> approvers) {
         this.approvers = approvers;
         this.observers.clear();
         if(approvers != null){
