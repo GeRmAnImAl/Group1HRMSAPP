@@ -1,12 +1,15 @@
 package com.example.group1hrmsapp.service;
 
+import com.example.group1hrmsapp.model.AppUser;
 import com.example.group1hrmsapp.model.Employee;
 import com.example.group1hrmsapp.repository.EmployeeRepository;
+import com.example.group1hrmsapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +25,10 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Autowired
     private EmployeeRepository employeeRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     /**
      * Retrieves all Employee Objects.
@@ -57,6 +64,15 @@ public class EmployeeServiceImpl implements EmployeeService{
     @Override
     public void saveEmployee(Employee employee) {
         this.employeeRepository.save(employee);
+
+        // Dynamically create and save login information for the new employee. The username will be firstName.lastName,
+        // the password will be Password + employeeId.
+
+        AppUser appUser = new AppUser();
+        appUser.setUserName(employee.getFirstName().toLowerCase() + "." + employee.getLastName().toLowerCase());
+        appUser.setPassword(passwordEncoder.encode("Password" + employee.getId()));
+        appUser.setEmployee(employee);
+        userRepository.save(appUser);
     }
 
     /**
