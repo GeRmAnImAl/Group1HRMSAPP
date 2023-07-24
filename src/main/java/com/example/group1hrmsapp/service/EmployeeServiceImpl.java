@@ -76,8 +76,8 @@ public class EmployeeServiceImpl implements EmployeeService{
     }
 
     /**
-     * Deletes an Employee from the database.
-     * @param id Long representing the employee in the database.
+     * Deletes an Employee from the database as well as the associated User.
+     * @param id Long representing the employee ID in the database.
      */
     @Override
     public void deleteEmployeeById(Long id) {

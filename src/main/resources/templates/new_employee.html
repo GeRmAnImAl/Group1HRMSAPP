@@ -14,54 +14,54 @@
   <form action="#" th:action="@{/saveEmployee}" th:object="${employee}"
         method="POST">
     <input type="text" th:field="*{firstName}"
-           placeholder="Employee First Name" class="form-control mb-4 col-4">
+           placeholder="Employee First Name" class="form-control mb-4 col-4" required>
 
     <input type="text" th:field="*{lastName}"
-           placeholder="Employee Last Name" class="form-control mb-4 col-4">
+           placeholder="Employee Last Name" class="form-control mb-4 col-4" required>
 
     <input type="text" th:field="*{dateOfBirth}"
-           placeholder="Employee Date of Birth" class="form-control mb-4 col-4">
+           placeholder="Employee Date of Birth" class="form-control mb-4 col-4" required>
 
     <input type="text" th:field="*{gender}"
-           placeholder="Employee Gender" class="form-control mb-4 col-4">
+           placeholder="Employee Gender" class="form-control mb-4 col-4" required>
 
     <input type="text" th:field="*{phoneNumber}"
-           placeholder="Employee Phone Number" class="form-control mb-4 col-4">
+           placeholder="Employee Phone Number" class="form-control mb-4 col-4" required>
 
     <input type="text" th:field="*{email}"
-           placeholder="Employee Email" class="form-control mb-4 col-4">
+           placeholder="Employee Email" class="form-control mb-4 col-4" required>
 
     <input type="text" th:field="*{address}"
-           placeholder="Employee Address" class="form-control mb-4 col-4">
+           placeholder="Employee Address" class="form-control mb-4 col-4" required>
 
     <input type="text" th:field="*{jobTitle}"
-           placeholder="Employee Job Title" class="form-control mb-4 col-4">
+           placeholder="Employee Job Title" class="form-control mb-4 col-4" required>
 
     <input type="text" th:field="*{department}"
-           placeholder="Employee Department" class="form-control mb-4 col-4">
+           placeholder="Employee Department" class="form-control mb-4 col-4" required>
 
     <input type="text" th:field="*{employmentType}"
-           placeholder="Employee Employment Type" class="form-control mb-4 col-4">
+           placeholder="Employee Employment Type" class="form-control mb-4 col-4" required>
 
     <label>Employee Hourly Rate:</label>
     <input type="text" th:field="*{hourlyRate}"
-           placeholder="Employee HourlyRate" class="form-control mb-4 col-4">
+           placeholder="Employee HourlyRate" class="form-control mb-4 col-4" required>
 
     <label>Employee Vacation Time Entitled:</label>
     <input type="text" th:field="*{vacationTime}"
-           placeholder="Employee Vacation Time Entitled" class="form-control mb-4 col-4">
+           placeholder="Employee Vacation Time Entitled" class="form-control mb-4 col-4" required>
 
     <label>Employee Sick Time Entitled:</label>
     <input type="text" th:field="*{sickTime}"
-           placeholder="Employee Sick Time Entitled" class="form-control mb-4 col-4">
+           placeholder="Employee Sick Time Entitled" class="form-control mb-4 col-4" required>
 
     <label>Employee Paid Time Off Entitled:</label>
     <input type="text" th:field="*{paidTimeOff}"
-           placeholder="Employee Paid Time Off Entitled" class="form-control mb-4 col-4">
+           placeholder="Employee Paid Time Off Entitled" class="form-control mb-4 col-4" required>
 
     <label>Is Employee Enrolled In Benefits? (true for yes, false for no)</label>
     <input type="text" th:field="*{enrolledInBenefits}"
-           placeholder="Is Employee Enrolled In Benefits? (true for yes, false for no)" class="form-control mb-4 col-4">
+           placeholder="Is Employee Enrolled In Benefits? (true for yes, false for no)" class="form-control mb-4 col-4" required>
 
 
     <button type="submit" class="btn btn-info col-2"> Save Employee</button>
