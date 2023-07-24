@@ -81,7 +81,25 @@ public class EmployeeServiceImpl implements EmployeeService{
      */
     @Override
     public void deleteEmployeeById(Long id) {
-        this.employeeRepository.deleteById(id);
+        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
+        if (optionalEmployee.isPresent()) {
+            Employee employeeToDelete = optionalEmployee.get();
+
+            if (employeeToDelete.getUser() != null) {
+                Optional<AppUser> optionalAppUser = userRepository.findById(employeeToDelete.getUser().getUserName());
+                if (optionalAppUser.isPresent()) {
+
+                    userRepository.delete(optionalAppUser.get());
+                } else {
+
+                    throw new RuntimeException("AppUser not found for employee ID :: " + id);
+                }
+            }
+
+            employeeRepository.delete(employeeToDelete);
+        } else {
+            throw new RuntimeException("Employee not found for id :: " + id);
+        }
     }
 
     /**
