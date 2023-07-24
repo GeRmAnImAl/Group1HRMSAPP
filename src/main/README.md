@@ -56,3 +56,15 @@ The objective of these changes is to enhance the usability and extend the functi
 
 
 ## Ritvik Kothapalli
+
+I chose to implement the Master/Detail pattern which is a User Interface Design Pattern. 
+
+It involves presenting a list (the "master") of items and allowing the
+user to select one to view additional information (the "detail"). 
+
+It is a common pattern for many types of applications, including this HRMS system, as it provides a clean and efficient
+method of displaying a large amount of data.
+
+In this HRMS system, this pattern can be seen in use in each of the modules. For example, in the
+"Employee Records" module, the master view is a list of employees, with each list
+item showing basic information such as the employee's name and ID. Furthermore, this was implemented in HTML files such as index.html, new_employee.html, employee_detail.html
