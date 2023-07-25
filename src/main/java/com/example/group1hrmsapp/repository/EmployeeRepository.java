@@ -2,6 +2,7 @@ package com.example.group1hrmsapp.repository;
 
 import com.example.group1hrmsapp.model.AppUser;
 import com.example.group1hrmsapp.model.Employee;
+import com.example.group1hrmsapp.model.SpecialType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -32,7 +33,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
      * @param specialType The specific type of employee to find in the database. This corresponds to the 'special_type' column in the 'employees' table.
      * @return A list of Employee objects that match the specified special type. Returns an empty list if no such employees are found.
      */
-    /*@Query(value = "SELECT * FROM employees WHERE special_type = :specialType", nativeQuery = true)
-    List<Employee> findBySpecialType(@Param("specialType") String specialType);*/
+    List<Employee> findBySpecialType(SpecialType specialType);
+
+
 
 }

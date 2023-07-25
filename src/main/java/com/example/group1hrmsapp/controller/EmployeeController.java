@@ -1,15 +1,19 @@
 package com.example.group1hrmsapp.controller;
 
 import com.example.group1hrmsapp.model.Employee;
+import com.example.group1hrmsapp.model.SpecialType;
 import com.example.group1hrmsapp.repository.EmployeeRepository;
 import com.example.group1hrmsapp.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.beans.PropertyEditorSupport;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Controller class handling employee related HTTP requests.
@@ -40,6 +44,12 @@ public class EmployeeController {
     @GetMapping("/showNewEmployeeForm")
     public String showNewEmployeeForm(Model model){
         Employee employee = new Employee();
+        List<Employee> allEmployees = employeeService.getAllEmployees();
+        List<Employee> managerEmployees = allEmployees.stream()
+                .filter(manager -> manager.getSpecialType() == SpecialType.MANAGER)
+                .collect(Collectors.toList());
+
+        model.addAttribute("managers", managerEmployees);
         model.addAttribute("employee", employee);
         return "new_employee";
     }
@@ -51,7 +61,6 @@ public class EmployeeController {
      */
     @PostMapping("/saveEmployee")
     public String saveEmployee(@ModelAttribute("employee") Employee employee){
-        System.out.println("Special Type in Controller: " + employee.getSpecialType());
         employeeService.saveEmployee(employee);
         return "redirect:/employeeList";
     }
@@ -65,7 +74,12 @@ public class EmployeeController {
     @GetMapping("/showUpdateEmployeeForm/{id}")
     public String showUpdateEmployeeForm(@PathVariable(value = "id") Long id, Model model){
         Employee employee = employeeService.getEmployeeById(id);
+        List<Employee> allEmployees = employeeService.getAllEmployees();
+        List<Employee> managerEmployees = allEmployees.stream()
+                .filter(manager -> manager.getSpecialType() == SpecialType.MANAGER)
+                .collect(Collectors.toList());
 
+        model.addAttribute("managers", managerEmployees);
         model.addAttribute("employee", employee);
         return "update_employee";
     }
@@ -105,4 +119,20 @@ public class EmployeeController {
         model.addAttribute("listEmployees", listEmployees);
         return "employee_list";
     }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(Employee.class, "manager", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                Employee manager = null;
+                if (text != null && !text.isEmpty()) {
+                    Long id = Long.parseLong(text);
+                    manager = employeeService.getEmployeeById(id);
+                }
+                setValue(manager);
+            }
+        });
+    }
+
 }

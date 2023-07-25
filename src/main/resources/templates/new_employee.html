@@ -29,8 +29,12 @@
     <input type="text" th:field="*{dateOfBirth}"
            placeholder="Employee Date of Birth" class="form-control mb-4 col-4" required>
 
-    <input type="text" th:field="*{gender}"
-           placeholder="Employee Gender" class="form-control mb-4 col-4" required>
+    <label for="gender">Gender:</label>
+    <select id="gender" th:field="*{gender}" class="form-control mb-4 col-4" required>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+      <option value="Other">Other</option>
+    </select>
 
     <input type="text" th:field="*{phoneNumber}"
            placeholder="Employee Phone Number" class="form-control mb-4 col-4" required>
@@ -47,8 +51,18 @@
     <input type="text" th:field="*{department}"
            placeholder="Employee Department" class="form-control mb-4 col-4" required>
 
-    <input type="text" th:field="*{employmentType}"
-           placeholder="Employee Employment Type" class="form-control mb-4 col-4" required>
+    <label for="manager">Manager:</label>
+    <select id="manager" th:field="*{manager}" class="form-control mb-4 col-4">
+      <option value=""></option>
+      <option th:each="manager : ${managers}" th:value="${manager.id}" th:text="${manager.firstName} + ' ' + ${manager.lastName}"></option>
+    </select>
+
+    <label for="employmentType">Employment Type:</label>
+    <select id="employmentType" th:field="*{employmentType}" class="form-control mb-4 col-4" required>
+      <option value="Full-Time">Full-Time</option>
+      <option value="Part-Time">Part-Time</option>
+      <option value="Other">Other</option>
+    </select>
 
     <label>Employee Hourly Rate:</label>
     <input type="text" th:field="*{hourlyRate}"
@@ -66,9 +80,13 @@
     <input type="text" th:field="*{paidTimeOff}"
            placeholder="Employee Paid Time Off Entitled" class="form-control mb-4 col-4" required>
 
-    <label>Is Employee Enrolled In Benefits? (true for yes, false for no)</label>
-    <input type="text" th:field="*{enrolledInBenefits}"
-           placeholder="Is Employee Enrolled In Benefits? (true for yes, false for no)" class="form-control mb-4 col-4" required>
+    <div class="form-check mb-4">
+      <input class="form-check-input" type="checkbox" id="enrolledInBenefits" th:field="*{enrolledInBenefits}">
+      <label class="form-check-label" for="enrolledInBenefits">
+        Is Employee Enrolled In Benefits?
+      </label>
+    </div>
+
 
 
     <button type="submit" class="btn btn-info col-2"> Save Employee</button>

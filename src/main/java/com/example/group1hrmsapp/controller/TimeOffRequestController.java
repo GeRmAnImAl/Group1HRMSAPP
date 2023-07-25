@@ -51,7 +51,7 @@ public class TimeOffRequestController {
     @PostMapping("/saveRequest")
     public String saveTimeOffRequest(@ModelAttribute("request") TimeOffRequest request){
         if (request.getApprover() == null || request.getApprover().isEmpty()) {
-            String approvers = String.valueOf(employeeService.getEmployeeById(request.getEmployee().getManager()).getId());
+            String approvers = String.valueOf(employeeService.getEmployeeById(request.getEmployee().getManager().getId()));
             request.setApprover(approvers);
         }
         timeOffRequestService.createTimeOffRequest(request);

@@ -52,7 +52,7 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
         Employee employee = employeeRepository.findById(timeOffRequest.getEmployee().getId())
                 .orElseThrow(() -> new NoSuchElementException("Employee not found"));
 
-        Employee approver = employeeRepository.findById(employee.getManager())
+        Employee approver = employeeRepository.findById(employee.getManager().getId())
                 .orElseThrow(() -> new NoSuchElementException("Approver not found"));
 
         String approvers = String.valueOf(approver.getId());

@@ -6,7 +6,7 @@ Once the application is running, visit ***localhost:8080*** in your browser.
 
 You will be prompted to log in. You can use the following credentials:
 
-**User Name:** TestUser
+**User Name:** Admin
 
 **Password:** Password123
 

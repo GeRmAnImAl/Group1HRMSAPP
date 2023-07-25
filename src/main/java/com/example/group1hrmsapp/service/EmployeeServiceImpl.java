@@ -64,29 +64,29 @@ public class EmployeeServiceImpl implements EmployeeService{
      */
     @Override
     public void saveEmployee(Employee employee) {
-        System.out.println("Special Type in Service: " + employee.getSpecialType());
-        this.employeeRepository.save(employee);
-
         // Dynamically create and save login information for the new employee. The username will be firstName.lastName,
-        // the password will be Password + employeeId.
-
+        // the password will be Password + employeeId. Also set Access levels for both AppUser and Employee.
         AppUser appUser = new AppUser();
         appUser.setUserName(employee.getFirstName().toLowerCase() + "." + employee.getLastName().toLowerCase());
         appUser.setPassword(passwordEncoder.encode("Password" + employee.getId()));
         switch (employee.getSpecialType()){
-            case "MANAGER":
+            case MANAGER:
                 appUser.setAccessLevel(AccessLevel.HIGH);
+                employee.setAccessLevel(AccessLevel.HIGH);
                 break;
 
-            case "HR":
+            case HR:
                 appUser.setAccessLevel(AccessLevel.MEDIUM);
+                employee.setAccessLevel(AccessLevel.MEDIUM);
                 break;
             default:
                 appUser.setAccessLevel(AccessLevel.LOW);
+                employee.setAccessLevel(AccessLevel.LOW);
                 break;
         }
         appUser.setEmployee(employee);
-        userRepository.save(appUser);
+        this.userRepository.save(appUser);
+        this.employeeRepository.save(employee);
     }
 
     /**

@@ -45,16 +45,16 @@ public class Employee implements Serializable, Observer {
     private double paidTimeOff;
     @Column(name = "enrolled")
     private boolean enrolledInBenefits;
-    @Column
-    private Long managerId;
+    @ManyToOne
+    @JoinColumn(name = "manager_id")
+    private Employee manager;
     @Enumerated(EnumType.STRING)
     @Column(name = "special_type")
     private SpecialType specialType;
     @Enumerated(EnumType.STRING)
     @Column(name = "access_level")
     private AccessLevel accessLevel;
-
-    @OneToMany(mappedBy = "managerId")
+    @OneToMany(mappedBy = "manager")
     private Set<Employee> subordinates = new HashSet<>();
     @OneToOne(mappedBy = "employee")
     private AppUser appUser;
@@ -335,16 +335,16 @@ public class Employee implements Serializable, Observer {
      * Retrieves the Manager of this Employee.
      * @return The Manager of this Employee.
      */
-    public Long getManager() {
-        return managerId;
+    public Employee getManager() {
+        return manager;
     }
 
     /**
      * Sets the Manager for this Employee.
      * @param manager The Manager to set for this Employee.
      */
-    public void setManager(Long manager) {
-        this.managerId = manager;
+    public void setManager(Employee manager) {
+        this.manager = manager;
     }
 
     /**
@@ -359,10 +359,18 @@ public class Employee implements Serializable, Observer {
      * Retrieves the special type of this Employee.
      * @return A String representing the special type of this Employee (e.g., "EMPLOYEE", "MANAGER", "HR").
      */
-    @Transient
-    public String getSpecialType() {
-        return this.getClass().getSimpleName();
+    public SpecialType getSpecialType() {
+        return this.specialType;
     }
+
+    /**
+     * Sets the special type for this Employee.
+     * @param specialType The special type to set for this Employee.
+     */
+    public void setSpecialType(SpecialType specialType) {
+        this.specialType = specialType;
+    }
+
 
     /**
      * Retrieves the access level of this HR professional.
