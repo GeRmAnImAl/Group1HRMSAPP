@@ -3,12 +3,15 @@ package com.example.group1hrmsapp.service;
 import com.example.group1hrmsapp.model.*;
 import com.example.group1hrmsapp.repository.EmployeeRepository;
 import com.example.group1hrmsapp.repository.TimeOffRequestRepository;
+import com.example.group1hrmsapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
@@ -17,7 +20,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 /**
  * Service class for managing TimeOffRequests.
@@ -29,6 +31,9 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     /**
      * Retrieve all TimeOffRequests
@@ -50,11 +55,10 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
         Employee approver = employeeRepository.findById(employee.getManager())
                 .orElseThrow(() -> new NoSuchElementException("Approver not found"));
 
-        List<Employee> approvers = new ArrayList<>();
-        approvers.add(approver);
+        String approvers = String.valueOf(approver.getId());
 
         timeOffRequest.setEmployee(employee);
-        timeOffRequest.setApprovers(approvers);
+        timeOffRequest.setApprover(approvers);
         timeOffRequest.setTimeOffStatus(TimeOffStatus.PENDING);
         timeOffRequest.registerObserver(approver);
 
@@ -81,15 +85,35 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
      * @return Approved TimeOffRequest
      */
     public TimeOffRequest approveTimeOffRequest(Long requestId, Long managerId) {
-        TimeOffRequest request = timeOffRequestRepository.findById(requestId).orElseThrow(() -> new NoSuchElementException("TimeOffRequest not found"));
+        // Fetch the currently logged in user
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String loggedInUsername = auth.getName();  // assuming the principal's name is the username
 
-        Employee manager = employeeRepository.findById(managerId).orElseThrow(() -> new NoSuchElementException("Manager not found"));
+        // Fetch the AppUser entity associated with the username
+        AppUser loggedInUser = userRepository.findById(loggedInUsername)
+                .orElseThrow(() -> new RuntimeException("No user logged in"));
+
+        // Fetch the Employee entity associated with the AppUser
+        Employee loggedInEmployee = employeeRepository.findByAppUser(loggedInUser)
+                .orElseThrow(() -> new RuntimeException("Logged in user has no associated employee"));
+
+        // Check if the logged in employee is the same as the manager
+        if (!loggedInEmployee.getId().equals(managerId)) {
+            throw new RuntimeException("Logged in user is not the manager for this request");
+        }
+
+        TimeOffRequest request = timeOffRequestRepository.findById(requestId)
+                .orElseThrow(() -> new NoSuchElementException("TimeOffRequest not found"));
+
+        Employee manager = employeeRepository.findById(managerId)
+                .orElseThrow(() -> new NoSuchElementException("Manager not found"));
+
         if (!"Manager".equals(manager.getSpecialType())) {
             throw new RuntimeException("This employee is not a manager");
         }
 
-        // Check if this manager is in the list of approvers
-        if (request.getApprovers().contains(manager)) {
+        // Check if this manager is the approver
+        if (String.valueOf(manager.getId()).equals(request.getApprover())) {
             request.setTimeOffStatus(TimeOffStatus.APPROVED);
         } else {
             throw new RuntimeException("This manager is not authorized to approve this request");
@@ -97,6 +121,7 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
 
         return timeOffRequestRepository.save(request);
     }
+
 
     /**
      * Reject a TimeOffRequest
@@ -113,7 +138,7 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
         }
 
         // Check if this manager is in the list of approvers
-        if (request.getApprovers().contains(manager)) {
+        if (request.getApprover().contains(String.valueOf(manager.getId()))) {
             request.setTimeOffStatus(TimeOffStatus.REJECTED);
         } else {
             throw new RuntimeException("This manager is not authorized to reject this request");

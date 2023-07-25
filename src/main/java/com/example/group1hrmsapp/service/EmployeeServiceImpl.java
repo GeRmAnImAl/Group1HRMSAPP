@@ -1,5 +1,6 @@
 package com.example.group1hrmsapp.service;
 
+import com.example.group1hrmsapp.model.AccessLevel;
 import com.example.group1hrmsapp.model.AppUser;
 import com.example.group1hrmsapp.model.Employee;
 import com.example.group1hrmsapp.repository.EmployeeRepository;
@@ -72,6 +73,18 @@ public class EmployeeServiceImpl implements EmployeeService{
         AppUser appUser = new AppUser();
         appUser.setUserName(employee.getFirstName().toLowerCase() + "." + employee.getLastName().toLowerCase());
         appUser.setPassword(passwordEncoder.encode("Password" + employee.getId()));
+        switch (employee.getSpecialType()){
+            case "MANAGER":
+                appUser.setAccessLevel(AccessLevel.HIGH);
+                break;
+
+            case "HR":
+                appUser.setAccessLevel(AccessLevel.MEDIUM);
+                break;
+            default:
+                appUser.setAccessLevel(AccessLevel.LOW);
+                break;
+        }
         appUser.setEmployee(employee);
         userRepository.save(appUser);
     }

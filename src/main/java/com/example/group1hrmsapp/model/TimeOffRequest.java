@@ -12,6 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "time_off_requests")
 public class TimeOffRequest implements Serializable, Subject {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -34,13 +35,10 @@ public class TimeOffRequest implements Serializable, Subject {
     private double duration;
 
     @Transient
-    private List<Observer> observers;
+    private List<Observer> observers = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(name = "TimeOffRequest_Approver",
-            joinColumns = @JoinColumn(name = "time_off_request_id"),
-            inverseJoinColumns = @JoinColumn(name = "approver_id"))
-    private List<Employee> approvers = new ArrayList<>();
+    @Column
+    private String approver = "";
 
     /**
      * Gets the id of this TimeOffRequest.
@@ -209,20 +207,16 @@ public class TimeOffRequest implements Serializable, Subject {
      * Gets the List of Managers who can approve this TimeOffRequest.
      * @return The List of Managers who can approve this TimeOffRequest.
      */
-    public List<Employee> getApprovers() {
-        return approvers;
+    public String getApprover() {
+        return approver;
     }
 
     /**
      * Sets the List of Managers who can approve this TimeOffRequest and also adds them as Observers.
      * @param approvers The List of Managers to set.
      */
-    public void setApprovers(List<Employee> approvers) {
-        this.approvers = approvers;
-        this.observers.clear();
-        if(approvers != null){
-            observers.addAll(approvers);
-        }
+    public void setApprover(String approvers) {
+        this.approver = approvers;
     }
 }
 

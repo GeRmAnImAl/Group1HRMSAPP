@@ -12,7 +12,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.beans.PropertyEditorSupport;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -51,28 +50,27 @@ public class TimeOffRequestController {
 
     @PostMapping("/saveRequest")
     public String saveTimeOffRequest(@ModelAttribute("request") TimeOffRequest request){
-        if (request.getApprovers().isEmpty()) {
-            List<Employee> approvers = new ArrayList<>();
-            approvers.add(employeeService.getEmployeeById(request.getEmployee().getManager()));
-            request.setApprovers(approvers);
+        if (request.getApprover() == null || request.getApprover().isEmpty()) {
+            String approvers = String.valueOf(employeeService.getEmployeeById(request.getEmployee().getManager()).getId());
+            request.setApprover(approvers);
         }
         timeOffRequestService.createTimeOffRequest(request);
         return "redirect:/timeOffRequestList";
     }
 
-    @PostMapping("/cancelRequest/{requestId}")
+    @GetMapping("/cancelRequest/{requestId}")
     public String cancelTimeOffRequest(@PathVariable Long requestId, Model model) {
         model.addAttribute("request", timeOffRequestService.cancelTimeOffRequest(requestId));
         return "redirect:/timeOffRequestList";
     }
 
-    @PostMapping("/approve/{requestId}/{managerId}")
+    @GetMapping("/approve/{requestId}/{managerId}")
     public String approveTimeOffRequest(@PathVariable Long requestId, @PathVariable Long managerId, Model model) {
         model.addAttribute("request", timeOffRequestService.approveTimeOffRequest(requestId, managerId));
         return "redirect:/timeOffRequestList";
     }
 
-    @PostMapping("/reject/{requestId}/{managerId}")
+    @GetMapping("/reject/{requestId}/{managerId}")
     public String rejectTimeOffRequest(@PathVariable Long requestId, @PathVariable Long managerId, Model model) {
         model.addAttribute("request", timeOffRequestService.rejectTimeOffRequest(requestId, managerId));
         return "redirect:/timeOffRequestList";

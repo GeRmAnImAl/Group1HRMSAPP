@@ -1,5 +1,6 @@
 package com.example.group1hrmsapp.repository;
 
+import com.example.group1hrmsapp.model.AppUser;
 import com.example.group1hrmsapp.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,6 +24,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
      */
     @Override
     Optional<Employee> findById(Long id);
+
+    Optional<Employee> findByAppUser(AppUser user);
 
     /**
      * This method returns a list of employees that match a specific special type.

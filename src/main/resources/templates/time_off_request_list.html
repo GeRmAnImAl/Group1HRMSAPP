@@ -66,7 +66,7 @@
       <th>End Date</th>
       <th>Duration</th>
       <th>Request Type</th>
-      <th>Approver(s)</th>
+      <th>Approver(s) ID</th>
       <th>Request Status</th>
       <th>Actions</th>
     </tr>
@@ -80,15 +80,13 @@
       <td th:text="${request.endDate}"></td>
       <td th:text="${request.duration}"></td>
       <td th:text="${request.timeOffType}"></td>
-      <td th:if="${request.approvers == null or request.approvers.isEmpty()}">N/A</td>
-      <td th:if="${request.approvers != null and !request.approvers.isEmpty()}" th:text="${request.approvers}"></td>
+      <td th:if="${request.approver == null || request.approver.isEmpty()}">N/A</td>
+      <td th:if="${request.approver != null && !request.approver.isEmpty()}" th:text="${request.approver}"></td>
       <td th:text="${request.timeOffStatus}"></td>
       <td>
-        <a th:if="${!request.approvers.isEmpty()}"
-           th:href="@{/approve/{requestId}/{managerId}(requestId=${request.id}, managerId=${request.approvers[0].getId()})}"
+        <a th:href="@{/approve/{requestId}/{managerId}(requestId=${request.id}, managerId=${request.approver})}"
            class="btn btn-primary">Approve</a>
-        <a th:if="${!request.approvers.isEmpty()}"
-           th:href="@{/reject/{requestId}/{managerId}(requestId=${request.id}, managerId=${request.approvers[0].getId()})}"
+        <a th:href="@{/reject/{requestId}/{managerId}(requestId=${request.id}, managerId=${request.approver})}"
            class="btn btn-danger">Reject</a>
 
         <a th:href="@{/cancelRequest/{requestId}(requestId=${request.id})}" class="btn btn-danger">Cancel</a>

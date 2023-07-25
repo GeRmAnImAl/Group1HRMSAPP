@@ -2,12 +2,17 @@ package com.example.group1hrmsapp.service;
 
 import com.example.group1hrmsapp.model.AppUser;
 import com.example.group1hrmsapp.repository.UserRepository;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A service class that implements the UserDetailsService interface from Spring Security to provide core user details functionality.
@@ -35,10 +40,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser user = userRepository.findById(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        // Map the access level to an authority.
+        GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getAccessLevel().name());
+
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getUserName())
                 .password(user.getPassword())
-                .authorities(new ArrayList<>())
+                .authorities(Collections.singleton(authority))
                 .build();
     }
+
+
 }

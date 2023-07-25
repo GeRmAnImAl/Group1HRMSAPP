@@ -47,7 +47,7 @@ public class UserController {
         return "redirect:/userList";
     }
 
-    @PostMapping("/login")
+    /*@PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestParam("userName") String userName, @RequestParam("password") String password){
         AppUser appUser = userService.getUserById(userName);
         if(appUser == null){
@@ -58,5 +58,5 @@ public class UserController {
         }
         String token = userService.generateJwtToken(appUser.getUserName());
         return ResponseEntity.ok(token);
-    }
+    }*/
 }
