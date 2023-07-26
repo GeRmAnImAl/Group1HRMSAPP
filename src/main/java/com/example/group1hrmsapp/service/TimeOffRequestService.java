@@ -15,4 +15,6 @@ public interface TimeOffRequestService {
     public TimeOffRequest rejectTimeOffRequest(Long requestId, Long managerId);
     Page<TimeOffRequest> findPaginated(int pageNo, int pageSize, String sortField, String sortDirection);
     Page<TimeOffRequest> findFilteredAndPaginated(Specification<TimeOffRequest> spec, Pageable pageable);
+    public Specification<TimeOffRequest> prepareSpecification(String startDate, String endDate, String timeOffType, String timeOffStatus);
+
 }

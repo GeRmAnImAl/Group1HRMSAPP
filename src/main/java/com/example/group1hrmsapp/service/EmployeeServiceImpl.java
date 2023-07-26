@@ -3,6 +3,7 @@ package com.example.group1hrmsapp.service;
 import com.example.group1hrmsapp.model.AccessLevel;
 import com.example.group1hrmsapp.model.AppUser;
 import com.example.group1hrmsapp.model.Employee;
+import com.example.group1hrmsapp.model.SpecialType;
 import com.example.group1hrmsapp.repository.EmployeeRepository;
 import com.example.group1hrmsapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -62,8 +64,10 @@ public class EmployeeServiceImpl implements EmployeeService{
      * Saves an Employee to the database.
      * @param employee Employee Object to be saved to the database.
      */
+    @Transactional
     @Override
     public void saveEmployee(Employee employee) {
+        Employee savedEmployee = this.employeeRepository.save(employee);
         // Dynamically create and save login information for the new employee. The username will be firstName.lastName,
         // the password will be Password + employeeId. Also set Access levels for both AppUser and Employee.
         AppUser appUser = new AppUser();
@@ -84,9 +88,17 @@ public class EmployeeServiceImpl implements EmployeeService{
                 employee.setAccessLevel(AccessLevel.LOW);
                 break;
         }
-        appUser.setEmployee(employee);
+        appUser.setEmployee(savedEmployee);
+
+        // Add Employee as a subordinate of a Manager if one has been selected.
+        Employee manager = savedEmployee.getManager();
+        if(manager != null && manager.getSpecialType() == SpecialType.MANAGER){
+            manager.addSubordinate(savedEmployee);
+            employeeRepository.save(manager);
+        }
+
         this.userRepository.save(appUser);
-        this.employeeRepository.save(employee);
+
     }
 
     /**
@@ -99,8 +111,8 @@ public class EmployeeServiceImpl implements EmployeeService{
         if (optionalEmployee.isPresent()) {
             Employee employeeToDelete = optionalEmployee.get();
 
-            if (employeeToDelete.getUser() != null) {
-                Optional<AppUser> optionalAppUser = userRepository.findById(employeeToDelete.getUser().getUserName());
+            if (employeeToDelete.getAppUser() != null) {
+                Optional<AppUser> optionalAppUser = userRepository.findById(employeeToDelete.getAppUser().getUserName());
                 if (optionalAppUser.isPresent()) {
 
                     userRepository.delete(optionalAppUser.get());

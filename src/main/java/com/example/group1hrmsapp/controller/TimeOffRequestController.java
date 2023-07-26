@@ -2,10 +2,14 @@ package com.example.group1hrmsapp.controller;
 
 import com.example.group1hrmsapp.model.Employee;
 import com.example.group1hrmsapp.model.TimeOffRequest;
+import com.example.group1hrmsapp.model.TimeOffStatus;
 import com.example.group1hrmsapp.service.EmployeeService;
 import com.example.group1hrmsapp.service.TimeOffRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -99,4 +103,44 @@ public class TimeOffRequestController {
         model.addAttribute("requests", requests);
         return "time_off_request_list";
     }
+
+    @PostMapping("/filterTimeOffRequests")
+    public String filterTimeOffRequests(
+            @RequestParam(name = "startDate", required = false) String startDate,
+            @RequestParam(name = "endDate", required = false) String endDate,
+            @RequestParam(name = "timeOffType", required = false) String timeOffType,
+            @RequestParam(name = "timeOffStatus", required = false) String timeOffStatus,
+            Model model
+    ) {
+        // Assuming TimeOffStatus is a valid enum value in uppercase (e.g., "APPROVED")
+        TimeOffStatus status = null;
+        if (timeOffStatus != null) {
+            try {
+                status = TimeOffStatus.valueOf(timeOffStatus.toUpperCase());
+            } catch (IllegalArgumentException ex) {
+                // Handle invalid status input by adding an error message to the model
+                model.addAttribute("errorMessage", "Invalid TimeOffStatus value: " + timeOffStatus);
+                // Here, you can choose to return the same view with the error message or a dedicated error view.
+                // For simplicity, let's return the same view with the error message.
+                return viewTimeOffRequestPage(model);
+            }
+        }
+
+        // Prepare the Specification for filtering
+        Specification<TimeOffRequest> spec = timeOffRequestService.prepareSpecification(startDate, endDate, timeOffType, timeOffStatus);
+
+        // Fetch the paginated and filtered TimeOffRequests
+        Page<TimeOffRequest> page = timeOffRequestService.findFilteredAndPaginated(spec, PageRequest.of(0, 10)); // Adjust the PageRequest as needed
+
+        List<TimeOffRequest> filteredRequests = page.getContent();
+
+        // Pass the filtered requests to the view
+        model.addAttribute("listTimeOffRequests", filteredRequests);
+
+        return "time_off_request_list";
+    }
+
+
+
+
 }

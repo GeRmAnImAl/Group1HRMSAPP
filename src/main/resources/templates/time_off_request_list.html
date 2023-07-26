@@ -12,7 +12,7 @@
   <h1>Time Off Request List</h1>
 
   <!-- Filter Form -->
-  <form th:action="@{/filterTimeOffRequests}" method="get" class="mb-3">
+  <form th:action="@{/filterTimeOffRequests}" method="post" class="mb-3">
     <div class="row">
       <div class="col">
         <label for="startDate" class="form-label">Start Date:</label>
@@ -26,23 +26,22 @@
         <label for="timeOffType" class="form-label">Time Off Type:</label>
         <select class="form-select" id="timeOffType" name="timeOffType">
           <option value="">All</option>
-          <option value="VACATION">Vacation</option>
-          <option value="PTO">PTO</option>
-          <option value="SICK">Sick</option>
-          <option value="BEREAVEMENT">Bereavement</option>
-          <option value="FAMILY_ILLNESS">Family Illness</option>
+          <th:block th:each="type : ${T(com.example.group1hrmsapp.model.TimeOffType).values()}">
+            <option th:value="${type.name()}" th:text="${type.name()}"></option>
+          </th:block>
         </select>
       </div>
+
       <div class="col">
         <label for="timeOffStatus" class="form-label">Time Off Status:</label>
         <select class="form-select" id="timeOffStatus" name="timeOffStatus">
           <option value="">All</option>
-          <option value="PENDING">Pending</option>
-          <option value="APPROVED">Approved</option>
-          <option value="REJECTED">Rejected</option>
-          <option value="CANCELLED">Cancelled</option>
+          <th:block th:each="status : ${T(com.example.group1hrmsapp.model.TimeOffStatus).values()}">
+            <option th:value="${status.name()}" th:text="${status.name()}"></option>
+          </th:block>
         </select>
       </div>
+
       <!-- Add More Filter Fields As Necessary  -->
     </div>
     <div class="row mt-3">

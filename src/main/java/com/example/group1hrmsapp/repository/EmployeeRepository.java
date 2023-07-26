@@ -4,9 +4,7 @@ import com.example.group1hrmsapp.model.AppUser;
 import com.example.group1hrmsapp.model.Employee;
 import com.example.group1hrmsapp.model.SpecialType;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.data.repository.query.Param;
 
 
 import java.util.List;
@@ -20,6 +18,7 @@ import java.util.Optional;
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     /**
      * Retrieves an employee by a specific ID number.
+     *
      * @param id Long representing the employee in the database.
      * @return an Employee Object.
      */

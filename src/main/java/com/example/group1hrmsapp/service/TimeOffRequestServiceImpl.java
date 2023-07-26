@@ -13,6 +13,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.Predicate;
 import java.time.LocalDate;
@@ -21,11 +22,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Service class for managing TimeOffRequests.
  */
 @Service
 public class TimeOffRequestServiceImpl implements TimeOffRequestService{
+    private static final Logger logger = LoggerFactory.getLogger(TimeOffRequestServiceImpl.class);
+
     @Autowired
     private TimeOffRequestRepository timeOffRequestRepository;
 
@@ -48,6 +54,7 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
      * Create a new TimeOffRequest
      * @param timeOffRequest to be created
      */
+    @Transactional
     public void createTimeOffRequest(TimeOffRequest timeOffRequest) {
         Employee employee = employeeRepository.findById(timeOffRequest.getEmployee().getId())
                 .orElseThrow(() -> new NoSuchElementException("Employee not found"));
@@ -70,6 +77,7 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
      * @param requestId of the request to be cancelled
      * @return Cancelled TimeOffRequest
      */
+    @Transactional
     public TimeOffRequest cancelTimeOffRequest(Long requestId) {
         TimeOffRequest request = timeOffRequestRepository.findById(requestId).orElseThrow(() -> new NoSuchElementException("TimeOffRequest not found"));
 
@@ -81,11 +89,12 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
     /**
      * Approve a TimeOffRequest
      * @param requestId of the request to be approved
-     * @param managerId of the manager approving the request
+     * @param userId of the manager approving the request
      * @return Approved TimeOffRequest
      */
-    public TimeOffRequest approveTimeOffRequest(Long requestId, Long managerId) {
-        // Fetch the currently logged in user
+    @Transactional
+    public TimeOffRequest approveTimeOffRequest(Long requestId, Long userId) {
+        // Fetch the currently logged-in user
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String loggedInUsername = auth.getName();  // assuming the principal's name is the username
 
@@ -94,55 +103,83 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
                 .orElseThrow(() -> new RuntimeException("No user logged in"));
 
         // Fetch the Employee entity associated with the AppUser
-        Employee loggedInEmployee = employeeRepository.findByAppUser(loggedInUser)
-                .orElseThrow(() -> new RuntimeException("Logged in user has no associated employee"));
-
-        // Check if the logged in employee is the same as the manager
-        if (!loggedInEmployee.getId().equals(managerId)) {
-            throw new RuntimeException("Logged in user is not the manager for this request");
-        }
+        Employee loggedInEmployee = loggedInUser.getEmployee();
 
         TimeOffRequest request = timeOffRequestRepository.findById(requestId)
                 .orElseThrow(() -> new NoSuchElementException("TimeOffRequest not found"));
 
-        Employee manager = employeeRepository.findById(managerId)
-                .orElseThrow(() -> new NoSuchElementException("Manager not found"));
+        Employee requestEmployee = request.getEmployee();
 
-        if (!"Manager".equals(manager.getSpecialType())) {
+        if (requestEmployee == null) {
+            throw new RuntimeException("No employee associated with the time off request");
+        }
+
+        Employee requestEmployeeManager = requestEmployee.getManager();
+
+        if (requestEmployeeManager == null || !requestEmployeeManager.getId().equals(loggedInEmployee.getId())) {
+            throw new RuntimeException("You are not allowed to approve this request");
+        }
+
+        if (loggedInEmployee.getSpecialType() != SpecialType.MANAGER) {
             throw new RuntimeException("This employee is not a manager");
         }
 
         // Check if this manager is the approver
-        if (String.valueOf(manager.getId()).equals(request.getApprover())) {
-            request.setTimeOffStatus(TimeOffStatus.APPROVED);
-        } else {
+        if (!request.getApprover().equals(String.valueOf(loggedInEmployee.getId()))) {
             throw new RuntimeException("This manager is not authorized to approve this request");
         }
+
+        request.setTimeOffStatus(TimeOffStatus.APPROVED);
 
         return timeOffRequestRepository.save(request);
     }
 
 
+
     /**
      * Reject a TimeOffRequest
      * @param requestId of the request to be rejected
-     * @param managerId of the manager rejecting the request
+     * @param userId of the manager rejecting the request
      * @return Rejected TimeOffRequest
      */
-    public TimeOffRequest rejectTimeOffRequest(Long requestId, Long managerId) {
-        TimeOffRequest request = timeOffRequestRepository.findById(requestId).orElseThrow(() -> new NoSuchElementException ("TimeOffRequest not found"));
+    @Transactional
+    public TimeOffRequest rejectTimeOffRequest(Long requestId, Long userId) {
+        // Fetch the currently logged-in user
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String loggedInUsername = auth.getName();  // assuming the principal's name is the username
 
-        Employee manager = employeeRepository.findById(managerId).orElseThrow(() -> new NoSuchElementException ("Manager not found"));
-        if (!"Manager".equals(manager.getSpecialType())) {
+        // Fetch the AppUser entity associated with the username
+        AppUser loggedInUser = userRepository.findById(loggedInUsername)
+                .orElseThrow(() -> new RuntimeException("No user logged in"));
+
+        // Fetch the Employee entity associated with the AppUser
+        Employee loggedInEmployee = loggedInUser.getEmployee();
+
+        TimeOffRequest request = timeOffRequestRepository.findById(requestId)
+                .orElseThrow(() -> new NoSuchElementException("TimeOffRequest not found"));
+
+        Employee requestEmployee = request.getEmployee();
+
+        if (requestEmployee == null) {
+            throw new RuntimeException("No employee associated with the time off request");
+        }
+
+        Employee requestEmployeeManager = requestEmployee.getManager();
+
+        if (requestEmployeeManager == null || !requestEmployeeManager.getId().equals(loggedInEmployee.getId())) {
+            throw new RuntimeException("You are not allowed to approve this request");
+        }
+
+        if (loggedInEmployee.getSpecialType() != SpecialType.MANAGER) {
             throw new RuntimeException("This employee is not a manager");
         }
 
-        // Check if this manager is in the list of approvers
-        if (request.getApprover().contains(String.valueOf(manager.getId()))) {
-            request.setTimeOffStatus(TimeOffStatus.REJECTED);
-        } else {
-            throw new RuntimeException("This manager is not authorized to reject this request");
+        // Check if this manager is the approver
+        if (!request.getApprover().equals(String.valueOf(loggedInEmployee.getId()))) {
+            throw new RuntimeException("This manager is not authorized to approve this request");
         }
+
+        request.setTimeOffStatus(TimeOffStatus.REJECTED);
 
         return timeOffRequestRepository.save(request);
     }
@@ -185,25 +222,26 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            if (startDate != null) {
+            if (startDate != null && !startDate.isEmpty()) { // Add a check for empty startDate
                 LocalDate start = LocalDate.parse(startDate, DateTimeFormatter.ISO_DATE);
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("startDate"), start));
             }
 
-            if (endDate != null) {
+            if (endDate != null && !endDate.isEmpty()) { // Add a check for empty endDate
                 LocalDate end = LocalDate.parse(endDate, DateTimeFormatter.ISO_DATE);
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("endDate"), end));
             }
 
             if (timeOffType != null) {
-                predicates.add(criteriaBuilder.equal(root.get("timeOffType"), TimeOffType.valueOf(timeOffType)));
+                predicates.add(criteriaBuilder.equal(root.get("timeOffType"), TimeOffType.valueOf(timeOffType.toUpperCase())));
             }
 
             if (timeOffStatus != null) {
-                predicates.add(criteriaBuilder.equal(root.get("timeOffStatus"), TimeOffStatus.valueOf(timeOffStatus)));
+                predicates.add(criteriaBuilder.equal(root.get("timeOffStatus"), TimeOffStatus.valueOf(timeOffStatus.toUpperCase())));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
+
 }

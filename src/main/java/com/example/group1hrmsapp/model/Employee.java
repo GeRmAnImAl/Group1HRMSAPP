@@ -56,7 +56,7 @@ public class Employee implements Serializable, Observer {
     private AccessLevel accessLevel;
     @OneToMany(mappedBy = "manager")
     private Set<Employee> subordinates = new HashSet<>();
-    @OneToOne(mappedBy = "employee")
+    @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
     private AppUser appUser;
 
     /**
@@ -79,7 +79,7 @@ public class Employee implements Serializable, Observer {
      * Retrieves the user linked to this Employee.
      * @return The AppUser linked to this Employee.
      */
-    public AppUser getUser() {
+    public AppUser getAppUser() {
         return appUser;
     }
 
@@ -87,7 +87,7 @@ public class Employee implements Serializable, Observer {
      * Sets the AppUser for this Employee.
      * @param appUser The AppUser to set for this Employee.
      */
-    public void setUser(AppUser appUser) {
+    public void setAppUser(AppUser appUser) {
         this.appUser = appUser;
     }
 
@@ -412,5 +412,19 @@ public class Employee implements Serializable, Observer {
     public void update(TimeOffRequest timeOffRequest) {
         // Implement logic to notify manager about request
         System.out.println("Manager " + getId() + " notified about request: " + timeOffRequest.getId());
+    }
+
+    public void addSubordinate(Employee employee) {
+        this.subordinates.add(employee);
+        employee.setManager(this);
+    }
+
+    public void removeSubordinate(Employee employee){
+        this.subordinates.remove(employee);
+    }
+
+    @Override
+    public String toString(){
+        return "Employee Name: " + this.getFullName() + " | Employee ID: " + this.getId() + " | Associated AppUser: " + this.getAppUser().getUserName();
     }
 }

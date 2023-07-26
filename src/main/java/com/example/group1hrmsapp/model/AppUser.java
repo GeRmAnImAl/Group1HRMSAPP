@@ -50,4 +50,9 @@ public class AppUser implements Serializable {
     public void setAccessLevel(AccessLevel accessLevel) {
         this.accessLevel = accessLevel;
     }
+
+    @Override
+    public String toString(){
+        return "UserName: " + this.userName + " | Associated Employee: " + this.employee.getFullName() + "  | ID: " + this.employee.getId();
+    }
 }
