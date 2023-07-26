@@ -79,7 +79,24 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
      */
     @Transactional
     public TimeOffRequest cancelTimeOffRequest(Long requestId) {
-        TimeOffRequest request = timeOffRequestRepository.findById(requestId).orElseThrow(() -> new NoSuchElementException("TimeOffRequest not found"));
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String loggedInUsername = auth.getName();
+
+        // Fetch the AppUser entity associated with the username
+        AppUser loggedInUser = userRepository.findById(loggedInUsername)
+                .orElseThrow(() -> new RuntimeException("No user logged in"));
+
+        // Fetch the Employee entity associated with the AppUser
+        Employee loggedInEmployee = loggedInUser.getEmployee();
+
+        TimeOffRequest request = timeOffRequestRepository.findById(requestId)
+                .orElseThrow(() -> new NoSuchElementException("TimeOffRequest not found"));
+
+        Employee requestingEmployee = request.getEmployee();
+
+        if(loggedInEmployee != requestingEmployee){
+            throw new RuntimeException("You are not allowed to cancel+ this request");
+        }
 
         request.setTimeOffStatus(TimeOffStatus.CANCELLED);
 
@@ -96,7 +113,7 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
     public TimeOffRequest approveTimeOffRequest(Long requestId, Long userId) {
         // Fetch the currently logged-in user
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String loggedInUsername = auth.getName();  // assuming the principal's name is the username
+        String loggedInUsername = auth.getName();
 
         // Fetch the AppUser entity associated with the username
         AppUser loggedInUser = userRepository.findById(loggedInUsername)
@@ -146,7 +163,7 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
     public TimeOffRequest rejectTimeOffRequest(Long requestId, Long userId) {
         // Fetch the currently logged-in user
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String loggedInUsername = auth.getName();  // assuming the principal's name is the username
+        String loggedInUsername = auth.getName();
 
         // Fetch the AppUser entity associated with the username
         AppUser loggedInUser = userRepository.findById(loggedInUsername)
