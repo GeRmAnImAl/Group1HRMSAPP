@@ -66,6 +66,13 @@ public class EmployeeController {
         return "redirect:/employeeList";
     }
 
+    @PostMapping("/updateEmployee")
+    public String updateEmployee(@ModelAttribute("employee") Employee employee){
+
+        employeeService.updateEmployee(employee);
+        return "redirect:/employeeList";
+    }
+
     /**
      * Handler for the GET request to show form for updating an employee.
      * @param id the ID of the employee to be updated.

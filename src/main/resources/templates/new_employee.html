@@ -21,10 +21,12 @@
     </select>
 
     <input type="text" th:field="*{firstName}"
-           placeholder="Employee First Name" class="form-control mb-4 col-4" required>
+           placeholder="Employee First Name" class="form-control mb-4 col-4"
+           pattern="[A-Za-z]+" title="Only letters are allowed." required>
 
     <input type="text" th:field="*{lastName}"
-           placeholder="Employee Last Name" class="form-control mb-4 col-4" required>
+           placeholder="Employee Last Name" class="form-control mb-4 col-4"
+           pattern="[A-Za-z]+" title="Only letters are allowed." required>
 
     <input type="text" th:field="*{dateOfBirth}"
            placeholder="Employee Date of Birth" class="form-control mb-4 col-4" required>
