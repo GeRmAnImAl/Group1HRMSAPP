@@ -8,7 +8,7 @@ You will be prompted to log in. You can use the following credentials:
 
 **User Name:** Admin
 
-**Password:** Password123
+**Password:** Password123!
 
 Once logged in you will be presented with the home page with a link to our first usecase.
 
