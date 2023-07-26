@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.beans.PropertyEditorSupport;
 import java.util.List;
@@ -112,20 +113,6 @@ public class TimeOffRequestController {
             @RequestParam(name = "timeOffStatus", required = false) String timeOffStatus,
             Model model
     ) {
-        // Assuming TimeOffStatus is a valid enum value in uppercase (e.g., "APPROVED")
-        TimeOffStatus status = null;
-        if (timeOffStatus != null) {
-            try {
-                status = TimeOffStatus.valueOf(timeOffStatus.toUpperCase());
-            } catch (IllegalArgumentException ex) {
-                // Handle invalid status input by adding an error message to the model
-                model.addAttribute("errorMessage", "Invalid TimeOffStatus value: " + timeOffStatus);
-                // Here, you can choose to return the same view with the error message or a dedicated error view.
-                // For simplicity, let's return the same view with the error message.
-                return viewTimeOffRequestPage(model);
-            }
-        }
-
         // Prepare the Specification for filtering
         Specification<TimeOffRequest> spec = timeOffRequestService.prepareSpecification(startDate, endDate, timeOffType, timeOffStatus);
 
@@ -137,10 +124,28 @@ public class TimeOffRequestController {
         // Pass the filtered requests to the view
         model.addAttribute("listTimeOffRequests", filteredRequests);
 
+        // Add pagination information to the model
+        model.addAttribute("currentPage", 1);
+        model.addAttribute("pageSize", 10);
+        model.addAttribute("sortField", "requestDate");
+        model.addAttribute("sortDir", "asc");
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("totalPages", page.getTotalPages());
+
         return "time_off_request_list";
     }
 
+    @GetMapping("/clearFilters")
+    public String clearFilters(RedirectAttributes redirectAttributes) {
+        // Redirect to the filter page after clearing the filters
+        // You can set any default filter values you want here
+        redirectAttributes.addAttribute("startDate", "");
+        redirectAttributes.addAttribute("endDate", "");
+        redirectAttributes.addAttribute("timeOffType", "");
+        redirectAttributes.addAttribute("timeOffStatus", "");
 
+        return "redirect:/timeOffRequestList";
+    }
 
 
 }

@@ -232,11 +232,13 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("endDate"), end));
             }
 
-            if (timeOffType != null) {
+            if (timeOffType != null && !timeOffType.isEmpty()) {
                 predicates.add(criteriaBuilder.equal(root.get("timeOffType"), TimeOffType.valueOf(timeOffType.toUpperCase())));
+            } else {
+                predicates.add(criteriaBuilder.isNotNull(root.get("timeOffType"))); // Filter for non-null timeOffType
             }
 
-            if (timeOffStatus != null) {
+            if (timeOffStatus != null && !timeOffStatus.isEmpty()) {
                 predicates.add(criteriaBuilder.equal(root.get("timeOffStatus"), TimeOffStatus.valueOf(timeOffStatus.toUpperCase())));
             }
 

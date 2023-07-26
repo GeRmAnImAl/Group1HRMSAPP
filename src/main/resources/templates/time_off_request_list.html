@@ -25,20 +25,18 @@
       <div class="col">
         <label for="timeOffType" class="form-label">Time Off Type:</label>
         <select class="form-select" id="timeOffType" name="timeOffType">
-          <option value="">All</option>
-          <th:block th:each="type : ${T(com.example.group1hrmsapp.model.TimeOffType).values()}">
-            <option th:value="${type.name()}" th:text="${type.name()}"></option>
-          </th:block>
+          <option value="">-- Any Type --</option>
+          <option th:each="type : ${T(com.example.group1hrmsapp.model.TimeOffType).values()}"
+                  th:value="${type.name()}" th:text="${type.name()}"></option>
         </select>
       </div>
 
       <div class="col">
         <label for="timeOffStatus" class="form-label">Time Off Status:</label>
         <select class="form-select" id="timeOffStatus" name="timeOffStatus">
-          <option value="">All</option>
-          <th:block th:each="status : ${T(com.example.group1hrmsapp.model.TimeOffStatus).values()}">
-            <option th:value="${status.name()}" th:text="${status.name()}"></option>
-          </th:block>
+          <option value="">-- Any Status --</option>
+          <option th:each="status : ${T(com.example.group1hrmsapp.model.TimeOffStatus).values()}"
+                  th:value="${status.name()}" th:text="${status.name()}"></option>
         </select>
       </div>
 
@@ -50,6 +48,7 @@
       </div>
       <div class="col">
         <button type="submit" class="btn btn-primary mt-4">Apply Filters</button>
+        <a th:href="@{/clearFilters}" class="btn btn-secondary mt-4">Clear Filters</a>
       </div>
     </div>
   </form>
