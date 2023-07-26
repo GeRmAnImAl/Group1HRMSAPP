@@ -12,6 +12,7 @@
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
             <button type="submit" class="btn btn-primary btn-sm">Logout</button>
         </form>
+        <a th:href="@{/showChangePasswordForm}" class="btn btn-primary">Change Password</a>
 
         <a th:href="@{/employeeList}" class="btn btn-primary">View Employee List</a>
         <a th:href="@{/timeOffRequestList}" class="btn btn-primary">View Time Off Requests</a>

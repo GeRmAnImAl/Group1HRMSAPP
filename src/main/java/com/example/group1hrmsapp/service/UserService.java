@@ -38,4 +38,6 @@ public interface UserService {
      * @return A JWT token as a string, signed with HS512 algorithm and the provided secret key.
      */
     String generateJwtToken(String username);
+
+    boolean changePassword(String username, String currentPassword, String newPassword);
 }

@@ -7,6 +7,8 @@ import com.example.group1hrmsapp.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -95,6 +97,27 @@ public class UserServiceImpl implements UserService{
         appUser.setUserName(username);
         appUser.setPassword(passwordEncoder.encode(password));
         userRepository.save(appUser);
+    }
+
+    @Override
+    public boolean changePassword(String username, String currentPassword, String newPassword) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String loggedInUsername = auth.getName();
+
+        // Fetch the AppUser entity associated with the username
+        AppUser loggedInUser = userRepository.findById(loggedInUsername)
+                .orElseThrow(() -> new RuntimeException("No user logged in"));
+
+        // Verify that the current password matches the user's actual password
+        if (!passwordEncoder.matches(currentPassword, loggedInUser.getPassword())) {
+            return false; // Passwords don't match
+        }
+
+        // Update the user's password with the new one
+        loggedInUser.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(loggedInUser);
+
+        return true;
     }
 
 }

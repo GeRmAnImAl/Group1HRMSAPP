@@ -1,19 +1,24 @@
 package com.example.group1hrmsapp.controller;
 
 import com.example.group1hrmsapp.model.AppUser;
+import com.example.group1hrmsapp.repository.UserRepository;
 import com.example.group1hrmsapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @Controller
 public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/userList")
     public String viewUserPage(Model model) {
@@ -34,11 +39,52 @@ public class UserController {
         return "redirect:/userList";
     }
 
-    @GetMapping("/showUpdateUserForm/{id}")
-    public String showUpdateUserForm(@PathVariable(value = "id") String id, Model model){
-        AppUser appUser = userService.getUserById(id);
-        model.addAttribute("user", appUser);
-        return "update_user";
+    @GetMapping("/showChangePasswordForm")
+    public String showChangePasswordForm(Model model){
+        model.addAttribute("currentPassword", "");
+        model.addAttribute("newPassword", "");
+        model.addAttribute("confirmPassword", "");
+        return "change_password";
+    }
+
+    @PostMapping("/changePassword")
+    public String changePassword(@RequestParam("currentPassword") String currentPassword,
+                                 @RequestParam("newPassword") String newPassword,
+                                 @RequestParam("confirmPassword") String confirmPassword, Model model) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String loggedInUsername = auth.getName();
+
+        // Fetch the AppUser entity associated with the username
+        AppUser loggedInUser = userRepository.findById(loggedInUsername)
+                .orElseThrow(() -> new RuntimeException("No user logged in"));
+        String username = loggedInUser.getUserName();
+
+        // Check if the new password and confirm password match
+        if (!newPassword.equals(confirmPassword)) {
+            model.addAttribute("error", "New Password and Confirm Password do not match.");
+            return "change_password";
+        }
+
+        // Validate password complexity requirements
+        String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+        if (!newPassword.matches(passwordPattern)) {
+            model.addAttribute("error", "Password must be at least 8 characters in length, "
+                    + "contain at least 1 uppercase letter, "
+                    + "contain at least 1 lowercase letter, "
+                    + "and contain at least 1 special symbol (@$!%*?&).");
+            return "change_password";
+        }
+
+        boolean passwordChanged = userService.changePassword(username, currentPassword, newPassword);
+
+        if (passwordChanged) {
+            model.addAttribute("success", "Password successfully changed.");
+        } else {
+            model.addAttribute("error", "Unable to change password. Please check your current password.");
+        }
+
+        return "password_change_result";
     }
 
     @GetMapping("/deleteUser/{id}")
@@ -47,16 +93,4 @@ public class UserController {
         return "redirect:/userList";
     }
 
-    /*@PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestParam("userName") String userName, @RequestParam("password") String password){
-        AppUser appUser = userService.getUserById(userName);
-        if(appUser == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
-        }
-        if(!password.equals(appUser.getPassword())){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Password");
-        }
-        String token = userService.generateJwtToken(appUser.getUserName());
-        return ResponseEntity.ok(token);
-    }*/
 }
