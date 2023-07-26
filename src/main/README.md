@@ -18,6 +18,30 @@ You will be able to add, modify, and delete Employees. The data is stored in a d
 
 hosted on AWS so there is no need to create an instance on your own machine.
 
+## User Account Creation
+User accounts are dynamically created when a new employee is created. The convention used
+
+to create the username and password for the new account is:
+
+**User Name:** firstname.lastname
+**Password:** Password + employee ID
+
+## User Persistance
+The application will know always know what user is logged in and can retrieve the employee that
+
+the user is associated with. This functionality is necessary for the time off request feature as well 
+
+as features planned for the future.
+
+## Time Off Request Functionality
+Any user with an employee ID can create a time off request. Only the assigned manager for the
+
+employee the time off request is assigned to can approve or reject the request. Only the employee
+
+assigned to the time off request can cancel the time off request. Currently, all users can view all
+
+created time off requests.
+
 # Implement Two Patterns
 ## AJ Germani
 I chose to implement the Observer OOP Design Pattern using the Manager and TimeOffRequest
