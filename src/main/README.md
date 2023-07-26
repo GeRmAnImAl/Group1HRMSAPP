@@ -26,6 +26,14 @@ to create the username and password for the new account is:
 **User Name:** firstname.lastname
 **Password:** Password + employee ID
 
+However, upon their first login user's will be directed to change their password to meet the more
+
+secure password standards. Non dynamically created passwords are required to contain at least
+
+1 uppercase letter, 1 lower case letter, 1 numeric digit, and 1 special character. Passwords are also
+
+encrypted before being stored in the database, and decrypted when retrieved.
+
 ## User Persistance
 The application will know always know what user is logged in and can retrieve the employee that
 
