@@ -1,5 +1,8 @@
 package com.example.group1hrmsapp.model;
 
+import jdk.jfr.BooleanFlag;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 
 import java.io.Serializable;
@@ -14,6 +17,9 @@ public class AppUser implements Serializable {
     @Enumerated(value = EnumType.STRING)
     @Column(name = "access_level")
     private AccessLevel accessLevel;
+    @BooleanFlag
+    @Column(name = "first_access")
+    private boolean firstTimeLogin;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
@@ -35,6 +41,14 @@ public class AppUser implements Serializable {
         this.password = password;
     }
 
+    public boolean isFirstTimeLogin() {
+        return firstTimeLogin;
+    }
+
+    public void setFirstTimeLogin(boolean firstTimeLogin) {
+        this.firstTimeLogin = firstTimeLogin;
+    }
+
     public Employee getEmployee() {
         return employee;
     }
@@ -50,6 +64,7 @@ public class AppUser implements Serializable {
     public void setAccessLevel(AccessLevel accessLevel) {
         this.accessLevel = accessLevel;
     }
+
 
     @Override
     public String toString(){

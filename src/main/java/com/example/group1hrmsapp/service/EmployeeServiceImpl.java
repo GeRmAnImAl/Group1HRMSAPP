@@ -89,6 +89,7 @@ public class EmployeeServiceImpl implements EmployeeService{
                 break;
         }
         appUser.setEmployee(savedEmployee);
+        appUser.setFirstTimeLogin(true);
 
         // Add Employee as a subordinate of a Manager if one has been selected.
         Employee manager = savedEmployee.getManager();

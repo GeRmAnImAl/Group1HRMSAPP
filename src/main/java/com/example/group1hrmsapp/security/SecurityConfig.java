@@ -9,18 +9,22 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
- * Security configuration class for JWT based spring security application.
+ * This class is used to configure the security settings for the application.
+ * It defines the security policies to apply on different URLs and configures user authentication.
+ * It also provides a password encoder bean.
  */
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
+    private final CustomAuthenticationSuccessHandler authenticationSuccessHandler;
 
     /**
      * Constructor for SecurityConfig.
      * @param userDetailsService A UserDetailsService instance used for user data retrieval during authentication.
      */
-    public SecurityConfig(UserDetailsService userDetailsService) {
+    public SecurityConfig(UserDetailsService userDetailsService, CustomAuthenticationSuccessHandler authenticationSuccessHandler) {
         this.userDetailsService = userDetailsService;
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
     }
 
     /**
@@ -47,14 +51,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * @param http An HttpSecurity instance to configure.
      * @throws Exception If there is an issue with the configuration.
      */
-    /*@Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin().permitAll();
-    }*/
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
@@ -63,7 +59,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/high/**").hasAuthority("ROLE_HIGH")
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().permitAll()
+                .formLogin()
+                .successHandler(authenticationSuccessHandler)
+                .permitAll()
                 .and()
                 .logout()
                 .logoutUrl("/logout") // Logout URL
@@ -73,6 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable(); // You may want to enable CSRF protection in a production application.
     }
+
 
 
 }
