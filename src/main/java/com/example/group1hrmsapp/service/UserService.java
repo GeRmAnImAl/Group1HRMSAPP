@@ -37,7 +37,7 @@ public interface UserService {
      * @param username The username for which to generate a JWT token.
      * @return A JWT token as a string, signed with HS512 algorithm and the provided secret key.
      */
-    String generateJwtToken(String username);
+    //String generateJwtToken(String username);
 
     boolean changePassword(String username, String currentPassword, String newPassword);
 }

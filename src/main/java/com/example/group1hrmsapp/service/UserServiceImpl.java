@@ -1,11 +1,9 @@
 package com.example.group1hrmsapp.service;
 
-import com.example.group1hrmsapp.model.AccessLevel;
 import com.example.group1hrmsapp.model.AppUser;
-import com.example.group1hrmsapp.model.Employee;
 import com.example.group1hrmsapp.repository.UserRepository;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+//import io.jsonwebtoken.Jwts;
+//import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -75,7 +73,7 @@ public class UserServiceImpl implements UserService{
      * @param username The username for which to generate a JWT token.
      * @return A JWT token as a string, signed with HS512 algorithm and the provided secret key.
      */
-    @Override
+    /*@Override
     public String generateJwtToken(String username) {
         long expirationMillis = System.currentTimeMillis() + (60 * 60 * 1000);
 
@@ -85,7 +83,7 @@ public class UserServiceImpl implements UserService{
                 .setExpiration(new Date(expirationMillis))
                 .signWith(SignatureAlgorithm.HS512, "secretKey")
                 .compact();
-    }
+    }*/
 
     /**
      * Creates and saves a new AppUser entity to the repository. The password will be encoded before the user is saved.
