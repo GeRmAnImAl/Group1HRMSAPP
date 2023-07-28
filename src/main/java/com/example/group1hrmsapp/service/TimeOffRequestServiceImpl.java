@@ -114,11 +114,9 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
         // Fetch the currently logged-in user
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String loggedInUsername = auth.getName();
-
         // Fetch the AppUser entity associated with the username
         AppUser loggedInUser = userRepository.findById(loggedInUsername)
                 .orElseThrow(() -> new RuntimeException("No user logged in"));
-
         // Fetch the Employee entity associated with the AppUser
         Employee loggedInEmployee = loggedInUser.getEmployee();
 
@@ -136,18 +134,14 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
         if (requestEmployeeManager == null || !requestEmployeeManager.getId().equals(loggedInEmployee.getId())) {
             throw new RuntimeException("You are not allowed to approve this request");
         }
-
         if (loggedInEmployee.getSpecialType() != SpecialType.MANAGER) {
             throw new RuntimeException("This employee is not a manager");
         }
-
         // Check if this manager is the approver
         if (!request.getApprover().equals(String.valueOf(loggedInEmployee.getId()))) {
             throw new RuntimeException("This manager is not authorized to approve this request");
         }
-
         request.setTimeOffStatus(TimeOffStatus.APPROVED);
-
         return timeOffRequestRepository.save(request);
     }
 

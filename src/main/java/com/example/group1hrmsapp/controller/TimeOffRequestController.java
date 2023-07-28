@@ -19,6 +19,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.beans.PropertyEditorSupport;
 import java.util.List;
 
+/**
+ * Controller to manage time off requests in the system.
+ */
 @Controller
 public class TimeOffRequestController {
 
@@ -27,12 +30,24 @@ public class TimeOffRequestController {
     @Autowired
     private EmployeeService employeeService;
 
+    /**
+     * Handles the GET request to display all time off requests.
+     *
+     * @param model the Model object to pass attributes to the view
+     * @return the name of the view
+     */
     @GetMapping("/timeOffRequestList")
     public String viewTimeOffRequestPage(Model model){
         model.addAttribute("listTimeOffRequests", timeOffRequestService.getAllTimeOffRequests());
         return "time_off_request_list";
     }
 
+    /**
+     * Handles the GET request to show the form for creating a new time off request.
+     *
+     * @param model the Model object to pass attributes to the view
+     * @return the name of the view
+     */
     @GetMapping("/showTimeOffRequestForm")
     public String createTimeOffRequest(Model model) {
         TimeOffRequest timeOffRequest = new TimeOffRequest();
@@ -42,6 +57,11 @@ public class TimeOffRequestController {
         return "new_time_off_request";
     }
 
+    /**
+     * Initialize the WebDataBinder used for data binding from web request parameters to JavaBean objects.
+     *
+     * @param binder the WebDataBinder
+     */
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Employee.class, "employee", new PropertyEditorSupport() {
@@ -53,6 +73,12 @@ public class TimeOffRequestController {
         });
     }
 
+    /**
+     * Handles the POST request to save a new time off request.
+     *
+     * @param request the time off request to be saved
+     * @return the redirect view name
+     */
     @PostMapping("/saveRequest")
     public String saveTimeOffRequest(@ModelAttribute("request") TimeOffRequest request){
         if (request.getApprover() == null || request.getApprover().isEmpty()) {
@@ -63,24 +89,57 @@ public class TimeOffRequestController {
         return "redirect:/timeOffRequestList";
     }
 
+    /**
+     * Handles the GET request to cancel a time off request.
+     *
+     * @param requestId the id of the time off request to be cancelled
+     * @param model the Model object to pass attributes to the view
+     * @return the redirect view name
+     */
     @GetMapping("/cancelRequest/{requestId}")
     public String cancelTimeOffRequest(@PathVariable Long requestId, Model model) {
         model.addAttribute("request", timeOffRequestService.cancelTimeOffRequest(requestId));
         return "redirect:/timeOffRequestList";
     }
 
+    /**
+     * Handles the GET request to approve a time off request.
+     *
+     * @param requestId the id of the time off request to be approved
+     * @param managerId the id of the manager who is approving the request
+     * @param model the Model object to pass attributes to the view
+     * @return the redirect view name
+     */
     @GetMapping("/approve/{requestId}/{managerId}")
     public String approveTimeOffRequest(@PathVariable Long requestId, @PathVariable Long managerId, Model model) {
         model.addAttribute("request", timeOffRequestService.approveTimeOffRequest(requestId, managerId));
         return "redirect:/timeOffRequestList";
     }
 
+    /**
+     * Handles the GET request to reject a time off request.
+     *
+     * @param requestId the id of the time off request to be rejected
+     * @param managerId the id of the manager who is rejecting the request
+     * @param model the Model object to pass attributes to the view
+     * @return the redirect view name
+     */
     @GetMapping("/reject/{requestId}/{managerId}")
     public String rejectTimeOffRequest(@PathVariable Long requestId, @PathVariable Long managerId, Model model) {
         model.addAttribute("request", timeOffRequestService.rejectTimeOffRequest(requestId, managerId));
         return "redirect:/timeOffRequestList";
     }
 
+    /**
+     * Handles the GET request to show a paginated list of time off requests.
+     *
+     * @param pageNo the current page number
+     * @param pageSize the number of records per page
+     * @param sortField the field by which to sort the records
+     * @param sortDir the direction of the sort (asc or desc)
+     * @param model the Model object to pass attributes to the view
+     * @return the name of the view
+     */
     @GetMapping("/requestPage")
     public String findPaginated(
             @RequestParam(name = "pageNo", defaultValue = "1") int pageNo,
@@ -105,6 +164,16 @@ public class TimeOffRequestController {
         return "time_off_request_list";
     }
 
+    /**
+     * Handles the POST request to filter time off requests.
+     *
+     * @param startDate the start date of the time off
+     * @param endDate the end date of the time off
+     * @param timeOffType the type of the time off
+     * @param timeOffStatus the status of the time off
+     * @param model the Model object to pass attributes to the view
+     * @return the name of the view
+     */
     @PostMapping("/filterTimeOffRequests")
     public String filterTimeOffRequests(
             @RequestParam(name = "startDate", required = false) String startDate,
@@ -135,6 +204,12 @@ public class TimeOffRequestController {
         return "time_off_request_list";
     }
 
+    /**
+     * Handles the GET request to clear all filters applied to time off requests.
+     *
+     * @param redirectAttributes attributes to be added to the redirect view
+     * @return the redirect view name
+     */
     @GetMapping("/clearFilters")
     public String clearFilters(RedirectAttributes redirectAttributes) {
         // Redirect to the filter page after clearing the filters
