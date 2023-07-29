@@ -29,10 +29,14 @@ public interface EmployeeService {
      */
     void saveEmployee(Employee employee);
 
+    /**
+     * Updates an existing Employee in the database.
+     * @param employee Employee Object to be updated in the database.
+     */
     void updateEmployee(Employee employee);
 
     /**
-     * Deletes and Employee from the database.
+     * Deletes an Employee from the database.
      * @param id Long representing the employee in the database.
      */
     void deleteEmployeeById(Long id);
