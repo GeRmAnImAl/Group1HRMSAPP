@@ -30,7 +30,7 @@ public class TimeOffRequest implements Serializable, Subject {
     private TimeOffType timeOffType;
     @Column
     @Enumerated(EnumType.STRING)
-    private TimeOffStatus timeOffStatus;
+    private ApprovalStatus timeOffStatus;
     @Column
     private double duration;
 
@@ -140,7 +140,7 @@ public class TimeOffRequest implements Serializable, Subject {
      * Gets the status of this TimeOffRequest.
      * @return The status of this TimeOffRequest.
      */
-    public TimeOffStatus getTimeOffStatus() {
+    public ApprovalStatus getTimeOffStatus() {
         return timeOffStatus;
     }
 
@@ -148,7 +148,7 @@ public class TimeOffRequest implements Serializable, Subject {
      * Sets the status of this TimeOffRequest.
      * @param timeOffStatus The status to set.
      */
-    public void setTimeOffStatus(TimeOffStatus timeOffStatus) {
+    public void setTimeOffStatus(ApprovalStatus timeOffStatus) {
         this.timeOffStatus = timeOffStatus;
     }
 

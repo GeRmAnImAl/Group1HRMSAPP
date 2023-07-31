@@ -10,7 +10,7 @@ package com.example.group1hrmsapp.model;
  *     <li>{@link #CANCELLED} - The request has been cancelled by the employee.</li>
  * </ul>
  */
-public enum TimeOffStatus {
+public enum ApprovalStatus {
     PENDING,
     APPROVED,
     REJECTED,

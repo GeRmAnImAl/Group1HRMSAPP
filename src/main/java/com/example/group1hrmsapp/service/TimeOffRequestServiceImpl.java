@@ -34,10 +34,8 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
 
     @Autowired
     private TimeOffRequestRepository timeOffRequestRepository;
-
     @Autowired
     private EmployeeRepository employeeRepository;
-
     @Autowired
     private UserRepository userRepository;
 
@@ -66,7 +64,7 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
 
         timeOffRequest.setEmployee(employee);
         timeOffRequest.setApprover(approvers);
-        timeOffRequest.setTimeOffStatus(TimeOffStatus.PENDING);
+        timeOffRequest.setTimeOffStatus(ApprovalStatus.PENDING);
         timeOffRequest.registerObserver(approver);
 
         timeOffRequestRepository.save(timeOffRequest);
@@ -95,10 +93,10 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
         Employee requestingEmployee = request.getEmployee();
 
         if(loggedInEmployee != requestingEmployee){
-            throw new RuntimeException("You are not allowed to cancel+ this request");
+            throw new RuntimeException("You are not allowed to cancel this request");
         }
 
-        request.setTimeOffStatus(TimeOffStatus.CANCELLED);
+        request.setTimeOffStatus(ApprovalStatus.CANCELLED);
 
         return timeOffRequestRepository.save(request);
     }
@@ -141,7 +139,7 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
         if (!request.getApprover().equals(String.valueOf(loggedInEmployee.getId()))) {
             throw new RuntimeException("This manager is not authorized to approve this request");
         }
-        request.setTimeOffStatus(TimeOffStatus.APPROVED);
+        request.setTimeOffStatus(ApprovalStatus.APPROVED);
         return timeOffRequestRepository.save(request);
     }
 
@@ -190,7 +188,7 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
             throw new RuntimeException("This manager is not authorized to approve this request");
         }
 
-        request.setTimeOffStatus(TimeOffStatus.REJECTED);
+        request.setTimeOffStatus(ApprovalStatus.REJECTED);
 
         return timeOffRequestRepository.save(request);
     }
@@ -250,7 +248,7 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
             }
 
             if (timeOffStatus != null && !timeOffStatus.isEmpty()) {
-                predicates.add(criteriaBuilder.equal(root.get("timeOffStatus"), TimeOffStatus.valueOf(timeOffStatus.toUpperCase())));
+                predicates.add(criteriaBuilder.equal(root.get("timeOffStatus"), ApprovalStatus.valueOf(timeOffStatus.toUpperCase())));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

@@ -2,14 +2,12 @@ package com.example.group1hrmsapp.controller;
 
 import com.example.group1hrmsapp.model.Employee;
 import com.example.group1hrmsapp.model.TimeOffRequest;
-import com.example.group1hrmsapp.model.TimeOffStatus;
 import com.example.group1hrmsapp.service.EmployeeService;
 import com.example.group1hrmsapp.service.TimeOffRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -210,7 +208,7 @@ public class TimeOffRequestController {
      * @param redirectAttributes attributes to be added to the redirect view
      * @return the redirect view name
      */
-    @GetMapping("/clearFilters")
+    @GetMapping("/clearRequestFilters")
     public String clearFilters(RedirectAttributes redirectAttributes) {
         // Redirect to the filter page after clearing the filters
         // You can set any default filter values you want here
