@@ -55,13 +55,13 @@ public class WorkedHoursController {
         return "redirect:/workedHoursList";
     }
 
-    @GetMapping("/approve/{workedHoursId}/{managerId}")
+    @GetMapping("/approveWorkedHours/{workedHoursId}/{managerId}")
     public String approveWorkedHours(@PathVariable Long workedHoursId, @PathVariable Long managerId, Model model) {
         model.addAttribute("request", workedHoursService.approveWorkedHours(workedHoursId, managerId));
         return "redirect:/workedHoursList";
     }
 
-    @GetMapping("/reject/{workedHoursId}/{managerId}")
+    @GetMapping("/rejectWorkedHours/{workedHoursId}/{managerId}")
     public String rejectWorkedHours(@PathVariable Long workedHoursId, @PathVariable Long managerId, Model model) {
         model.addAttribute("request", workedHoursService.rejectWorkedHours(workedHoursId, managerId));
         return "redirect:/workedHoursList";
