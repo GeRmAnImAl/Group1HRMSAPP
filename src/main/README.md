@@ -12,7 +12,7 @@ You will be prompted to log in. You can use the following credentials:
 
 Once logged in you will be presented with the home page with a link to our first usecase.
 
-Our first usecase is CRUD functionality for Employee Recrods.
+Our first usecase is CRUD functionality for Employee Records.
 
 You will be able to add, modify, and delete Employees. The data is stored in a database
 
@@ -34,7 +34,14 @@ secure password standards. Non dynamically created passwords are required to con
 
 encrypted before being stored in the database, and decrypted when retrieved.
 
-## User Persistance
+### Note*
+**Some Users have already had their passwords changed to meet new password standards,**
+
+**if you are attempting to log in with a different user account and getting a bad credentials**
+
+**error try using the password convention: "Password" + employee ID + "!"**
+
+## User Persistence
 The application will know always know what user is logged in and can retrieve the employee that
 
 the user is associated with. This functionality is necessary for the time off request feature as well 
@@ -50,6 +57,15 @@ assigned to the time off request can cancel the time off request. Currently, all
 
 created time off requests.
 
+## Worked Hours Functionality
+Users associated with employees (should be all users but Admin) can now submit their hours worked
+
+for a given time frame. Only the assigned manager to the employee who submits the worked hours
+
+can approve or reject them. Only the employee who created the worked hours can cancel them.
+
+Currently, all users can view all submitted worked hours.
+
 # Implement Two Patterns
 ## AJ Germani
 I chose to implement the Observer OOP Design Pattern using the Manager and TimeOffRequest
@@ -60,7 +76,7 @@ and Subject.
 
 I also chose to implement the Search Filters User Interface Pattern for the time_off_request_list.html.
 
-Implementation of this pattern occured in the TimeOffRequestController, TimeOffRequestRepository,
+Implementation of this pattern occurred in the TimeOffRequestController, TimeOffRequestRepository,
 
 TimeOffRequestService, TimeOffRequestServiceImpl, and time_off_request_list.html.
 
@@ -181,13 +197,13 @@ when it can simply be rejected by a manager.
 ## Long Parameter List in Constructor
 There are benefits to utilizing the builder pattern to construct complicated classes. However, we determined the flow
 
-of the application sufficiently handles building objects through usage of the controller and serviceimpl classes. Using
+of the application sufficiently handles building objects through usage of the controller and service impl classes. Using
 
 forms to accept user input and translating that to a Model has also enhanced this functionality. This can be reflected
 
-in the EmployeeController, EmployeeServiceImpl, TimeOffReqeustController, TimeOffReqeustServiceImpl classes. It
+in the EmployeeController, EmployeeServiceImpl, TimeOffRequestController, TimeOffRequestServiceImpl classes. It
 
-is also reflected in the new_time_off_reqeust, new_employee, update_employee, and change_password html files. 
+is also reflected in the new_time_off_request, new_employee, update_employee, and change_password html files. 
 ## Exposing Internal Details
 As we are now using password encryption there is no reason to remove the public getter for the password in the
 
