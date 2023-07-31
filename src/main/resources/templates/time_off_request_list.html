@@ -110,7 +110,7 @@
       <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, totalPages)}">
         <a class="page-link"
            th:href="@{/requestPage/(pageNo=${pageNumber}, size=${totalItems}, sortField=${sortField}, sortDir=${sortDir})}"
-           th:classappend="${pageNumber == currentPage} ? active">${pageNumber}</a>
+           th:classappend="${pageNumber == currentPage} ? active" th:text="${pageNumber}"></a>
       </li>
       <li class="page-item" th:classappend="${currentPage == totalPages} ? disabled">
         <a class="page-link"

@@ -1,10 +1,12 @@
 package com.example.group1hrmsapp.service;
 
+import com.example.group1hrmsapp.model.Employee;
 import com.example.group1hrmsapp.model.WorkedHours;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -67,11 +69,11 @@ public interface WorkedHoursService {
 
     /**
      * Prepares a Specification object based on provided filter criteria.
-     * @param employeeId the ID of the employee the hours are associated with.
+     * @param employee the ID of the employee the hours are associated with.
      * @param startDate the start date for the worked hours.
      * @param endDate the end date for the worked hours.
      * @param approvalStatus the status of the worked hours.
      * @return a Specification object.
      */
-    Specification<WorkedHours> prepareSpecification(String employeeId,String startDate, String endDate, String approvalStatus);
+    Specification<WorkedHours> prepareSpecification(Employee employee, LocalDate startDate, LocalDate endDate, String approvalStatus);
 }

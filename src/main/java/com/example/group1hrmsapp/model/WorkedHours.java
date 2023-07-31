@@ -1,7 +1,10 @@
 package com.example.group1hrmsapp.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 /**
  * The WorkedHours class represents an employee's worked hours in the HRMS application.
@@ -12,14 +15,16 @@ public class WorkedHours implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "employeeId")
-    private Long employeeId;
+    @ManyToOne
+    private Employee employee;
     @Column(name = "hours_worked")
     private double hoursWorked;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "start_date")
-    private String startDate;
+    private LocalDate startDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "end_date")
-    private String endDate;
+    private LocalDate endDate;
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private ApprovalStatus approvalStatus;
@@ -41,19 +46,19 @@ public class WorkedHours implements Serializable {
     }
 
     /**
-     * Get the employee ID associated with the WorkedHours.
-     * @return employeeId of the WorkedHours.
+     * Get the employee associated with the WorkedHours.
+     * @return employee of the WorkedHours.
      */
-    public Long getEmployeeId() {
-        return employeeId;
+    public Employee getEmployee() {
+        return employee;
     }
 
     /**
-     * Set the employee ID associated with the WorkedHours.
-     * @param employeeId the employee id to set.
+     * Set the employee associated with the WorkedHours.
+     * @param employee the employee to set.
      */
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 
     /**
@@ -76,7 +81,7 @@ public class WorkedHours implements Serializable {
      * Get the start date of the work period.
      * @return startDate of the work period.
      */
-    public String getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
@@ -84,7 +89,7 @@ public class WorkedHours implements Serializable {
      * Set the start date of the work period.
      * @param startDate the start date to set.
      */
-    public void setStartDate(String startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
@@ -92,7 +97,7 @@ public class WorkedHours implements Serializable {
      * Get the end date of the work period.
      * @return endDate of the work period.
      */
-    public String getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
@@ -100,7 +105,7 @@ public class WorkedHours implements Serializable {
      * Set the end date of the work period.
      * @param endDate the end date to set.
      */
-    public void setEndDate(String endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 

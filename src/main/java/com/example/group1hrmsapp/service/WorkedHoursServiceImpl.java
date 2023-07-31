@@ -43,7 +43,8 @@ public class WorkedHoursServiceImpl implements WorkedHoursService{
         AppUser loggedInUser = userRepository.findById(loggedInUsername)
                 .orElseThrow(()-> new RuntimeException("No user logged in"));
         Employee loggedInEmployee = loggedInUser.getEmployee();
-        workedHours.setEmployeeId(loggedInEmployee.getId());
+        workedHours.setEmployee(loggedInEmployee);
+        workedHours.setApprovalStatus(ApprovalStatus.PENDING);
 
         workedHoursRepository.save(workedHours);
     }
@@ -58,7 +59,7 @@ public class WorkedHoursServiceImpl implements WorkedHoursService{
         WorkedHours workedHours = workedHoursRepository.findById(workedHoursId)
                 .orElseThrow(()-> new NoSuchElementException("WorkedHours not found"));
 
-        if (loggedInEmployee.getId() != workedHours.getEmployeeId()){
+        if (loggedInEmployee.getId() != workedHours.getEmployee().getId()){
             throw new RuntimeException("You are not allowed to cancel these hours");
         }
 
@@ -76,7 +77,7 @@ public class WorkedHoursServiceImpl implements WorkedHoursService{
         Employee loggedInEmployee = loggedInUser.getEmployee();
         WorkedHours workedHours = workedHoursRepository.findById(workedHoursId)
                 .orElseThrow(()-> new NoSuchElementException("WorkedHours not found"));
-        Employee hoursEmployee = employeeRepository.findById(workedHours.getEmployeeId())
+        Employee hoursEmployee = employeeRepository.findById(workedHours.getEmployee().getId())
                 .orElseThrow(()-> new RuntimeException("The employee associated with these hours does not exist."));
         Employee hoursEmployeeManager = hoursEmployee.getManager();
 
@@ -101,7 +102,7 @@ public class WorkedHoursServiceImpl implements WorkedHoursService{
         Employee loggedInEmployee = loggedInUser.getEmployee();
         WorkedHours workedHours = workedHoursRepository.findById(workedHoursId)
                 .orElseThrow(()-> new NoSuchElementException("WorkedHours not found"));
-        Employee hoursEmployee = employeeRepository.findById(workedHours.getEmployeeId())
+        Employee hoursEmployee = employeeRepository.findById(workedHours.getEmployee().getId())
                 .orElseThrow(()-> new RuntimeException("The employee associated with these hours does not exist."));
         Employee hoursEmployeeManager = hoursEmployee.getManager();
 
@@ -130,25 +131,24 @@ public class WorkedHoursServiceImpl implements WorkedHoursService{
     }
 
     @Override
-    public Specification<WorkedHours> prepareSpecification(String employeeId, String startDate, String endDate, String approvalStatus) {
+    public Specification<WorkedHours> prepareSpecification(Employee employee, LocalDate startDate, LocalDate endDate, String approvalStatus) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
-            if(employeeId != null && !employeeId.isEmpty()){ // Add a check for empty employeeId
-                predicates.add(criteriaBuilder.equal(root.get("employeeId"), employeeId));
+
+            if(employee != null){ // Add a check for empty employee
+                predicates.add(criteriaBuilder.equal(root.get("employee"), employee));
             }
 
-            if (startDate != null && !startDate.isEmpty()) { // Add a check for empty startDate
-                LocalDate start = LocalDate.parse(startDate, DateTimeFormatter.ISO_DATE);
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("startDate"), start));
+            if (startDate != null) { // Add a check for null startDate
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("startDate"), startDate));
             }
 
-            if (endDate != null && !endDate.isEmpty()) { // Add a check for empty endDate
-                LocalDate end = LocalDate.parse(endDate, DateTimeFormatter.ISO_DATE);
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("endDate"), end));
+            if (endDate != null) { // Add a check for null endDate
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("endDate"), endDate));
             }
 
             if (approvalStatus != null && !approvalStatus.isEmpty()) {
-                predicates.add(criteriaBuilder.equal(root.get("timeOffStatus"), ApprovalStatus.valueOf(approvalStatus.toUpperCase())));
+                predicates.add(criteriaBuilder.equal(root.get("approvalStatus"), ApprovalStatus.valueOf(approvalStatus.toUpperCase())));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
