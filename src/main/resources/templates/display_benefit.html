@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Human Resource Management System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+  <h1>View Benefit</h1>
+
+  <div class="row">
+    <div class="col">
+      <strong><label class="form-label">Coverage Type:</label></strong>
+    </div>
+    <div class="col">
+      <p th:text="${benefit.coverageType}"></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <strong><label class="form-label">Coverage Provider:</label></strong>
+    </div>
+    <div class="col">
+      <p th:text="${benefit.coverageProvider}"></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <strong><label class="form-label">Benefit Name:</label></strong>
+    </div>
+    <div class="col">
+      <p th:text="${benefit.benefitName}"></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <strong><label class="form-label">Benefit Cost $:</label></strong>
+    </div>
+    <div class="col">
+      <p th:text="${benefit.benefitCost}"></p>
+    </div>
+  </div>
+
+  <strong><label class="form-label">Benefit Description:</label></strong>
+  <p th:text="${benefit.benefitDesc}"></p>
+
+  <a href="#" th:href="@{/benefitsList}" class="btn btn-danger col-2 ml-2">Back</a>
+</div>
+</body>
+</html>

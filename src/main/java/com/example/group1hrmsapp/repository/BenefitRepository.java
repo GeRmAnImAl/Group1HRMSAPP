@@ -1,7 +1,9 @@
 package com.example.group1hrmsapp.repository;
 
 import com.example.group1hrmsapp.model.Benefit;
+import com.example.group1hrmsapp.model.WorkedHours;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -11,7 +13,7 @@ import java.util.Optional;
  * and could be used to add more complex, custom operations related to Benefits in the future.
  */
 @Repository
-public interface BenefitRepository extends JpaRepository<Benefit, Long> {
+public interface BenefitRepository extends JpaRepository<Benefit, Long>, JpaSpecificationExecutor<Benefit> {
     /**
      * Retrieves a benefit by a specific ID number.
      *

@@ -2,6 +2,7 @@ package com.example.group1hrmsapp.service;
 
 import com.example.group1hrmsapp.model.*;
 import com.example.group1hrmsapp.repository.EmployeeRepository;
+import com.example.group1hrmsapp.repository.PaymentRepository;
 import com.example.group1hrmsapp.repository.UserRepository;
 import com.example.group1hrmsapp.repository.WorkedHoursRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.Predicate;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Service
 public class WorkedHoursServiceImpl implements WorkedHoursService{
@@ -29,6 +28,10 @@ public class WorkedHoursServiceImpl implements WorkedHoursService{
     private EmployeeRepository employeeRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PaymentRepository paymentRepository;
+    @Autowired
+    private PaymentService paymentService;
 
 
     @Override
@@ -49,6 +52,7 @@ public class WorkedHoursServiceImpl implements WorkedHoursService{
         workedHoursRepository.save(workedHours);
     }
 
+
     @Override
     public WorkedHours cancelWorkedHours(Long workedHoursId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -66,6 +70,18 @@ public class WorkedHoursServiceImpl implements WorkedHoursService{
         workedHours.setApprovalStatus(ApprovalStatus.CANCELLED);
 
         return workedHoursRepository.save(workedHours);
+    }
+
+    @Override
+    public void deleteWorkedHoursById(Long id) {
+        Optional<WorkedHours> optionalWorkedHours = workedHoursRepository.findById(id);
+        if(optionalWorkedHours.isPresent()){
+            WorkedHours workedHoursToDelete = optionalWorkedHours.get();
+            workedHoursRepository.delete(workedHoursToDelete);
+        }
+        else{
+            throw new RuntimeException("WorkedHours not found for id :: " + id);
+        }
     }
 
     @Override
@@ -89,6 +105,35 @@ public class WorkedHoursServiceImpl implements WorkedHoursService{
         }
 
         workedHours.setApprovalStatus(ApprovalStatus.APPROVED);
+
+        List<Payment> paymentList = paymentRepository.findAll();
+        boolean paymentFound = false;
+
+        if (!paymentList.isEmpty()) {
+            for (Payment payment : paymentList) {
+                if (Objects.equals(workedHours.getEmployee().getId(), payment.getEmployee().getId())) {
+                    payment.getWorkedHoursList().add(workedHours);
+                    payment.setPaymentAmount(paymentService.calculateCost(payment, workedHours));
+                    paymentRepository.save(payment);
+                    paymentFound = true;
+                    workedHours.setPayment(payment);
+                    break;
+                }
+            }
+        }
+
+        if(paymentList.isEmpty() || !paymentFound) {
+            Payment newPayment = new Payment();
+            newPayment.setEmployee(workedHours.getEmployee());
+            newPayment.getWorkedHoursList().add(workedHours);
+            workedHours.setPayment(newPayment);
+
+
+
+            newPayment.setPaymentAmount(paymentService.calculateCost(newPayment, workedHours));
+            newPayment.setPaymentStatus(PaymentStatus.PENDING);
+            paymentRepository.save(newPayment);
+        }
 
         return workedHoursRepository.save(workedHours);
     }

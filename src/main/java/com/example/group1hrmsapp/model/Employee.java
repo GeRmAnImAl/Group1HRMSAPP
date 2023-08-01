@@ -3,8 +3,8 @@ package com.example.group1hrmsapp.model;
 import javax.persistence.*;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 
 /**
  * The Employee class represents an employee in the HRMS application.
@@ -58,6 +58,11 @@ public class Employee implements Serializable, Observer {
     private Set<Employee> subordinates = new HashSet<>();
     @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
     private AppUser appUser;
+    @ElementCollection
+    @CollectionTable(name = "employee_benefits", joinColumns = @JoinColumn(name = "employee_id"))
+    @MapKeyColumn(name = "benefit_id")
+    @Column(name = "benefit_date")
+    private Map<Benefit, LocalDate> benefitList = new HashMap<>();
 
     /**
      * Retrieves the ID of this Employee.
@@ -402,6 +407,14 @@ public class Employee implements Serializable, Observer {
      */
     public void setSubordinates(Set<Employee> subordinates) {
         this.subordinates = subordinates;
+    }
+
+    public Map<Benefit, LocalDate> getBenefitList() {
+        return benefitList;
+    }
+
+    public void setBenefitList(Map<Benefit, LocalDate> benefitList) {
+        this.benefitList = benefitList;
     }
 
     /**
