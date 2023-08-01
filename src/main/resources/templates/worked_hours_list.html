@@ -72,14 +72,16 @@
             <td th:text="${hours.hoursWorked}"></td>
             <td th:text="${hours.approvalStatus}"></td>
             <td>
-                <a th:if="${hours.getEmployee().getManager()?.getId() != null}"
+                <a th:if="${hours.getEmployee().getManager()?.getId() != null and hours.approvalStatus.toString() != 'APPROVED'}"
                    th:href="@{/approveWorkedHours/{workedHoursId}/{managerId}(workedHoursId=${hours.id}, managerId=${hours.getEmployee().getManager()?.getId()})}"
                    class="btn btn-primary">Approve</a>
-                <a th:if="${hours.getEmployee().getManager()?.getId() != null}"
+
+                <a th:if="${hours.getEmployee().getManager()?.getId() != null and hours.approvalStatus.toString() != 'REJECTED'}"
                    th:href="@{/rejectWorkedHours/{workedHoursId}/{managerId}(workedHoursId=${hours.id}, managerId=${hours.getEmployee().getManager()?.getId()})}"
                    class="btn btn-danger">Reject</a>
 
-                <a th:href="@{/cancelWorkedHours/{workedHoursId}(workedHoursId=${hours.id})}" class="btn btn-danger">Cancel</a>
+                <a th:if="${hours.approvalStatus.toString() != 'CANCELLED'}"
+                   th:href="@{/cancelWorkedHours/{workedHoursId}(workedHoursId=${hours.id})}" class="btn btn-danger">Cancel</a>
             </td>
         </tr>
         </tbody>

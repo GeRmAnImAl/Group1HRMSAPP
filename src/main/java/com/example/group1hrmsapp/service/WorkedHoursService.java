@@ -27,6 +27,12 @@ public interface WorkedHoursService {
     void createWorkedHours(WorkedHours workedHours);
 
     /**
+     * Deletes  worked hours from the database.
+     * @param id Long representing the worked hours in the database.
+     */
+    void deleteWorkedHoursById(Long id);
+
+    /**
      * Cancels worked hours.
      * @param workedHoursId the id of the WorkedHours to be cancelled.
      * @return the cancelled WorkedHours object.

@@ -28,6 +28,10 @@ public class WorkedHours implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private ApprovalStatus approvalStatus;
+    @ManyToOne
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
+
 
     /**
      * Get the ID of the WorkedHours.
@@ -123,5 +127,21 @@ public class WorkedHours implements Serializable {
      */
     public void setApprovalStatus(ApprovalStatus approvalStatus) {
         this.approvalStatus = approvalStatus;
+    }
+
+    /**
+     * Get the payment associated with the worked hours.
+     * @return payment associated with the worked hours.
+     */
+    public Payment getPayment() {
+        return payment;
+    }
+
+    /**
+     * Set the payment associated with the worked hours.
+     * @param payment the payment to set.
+     */
+    public void setPayment(Payment payment) {
+        this.payment = payment;
     }
 }

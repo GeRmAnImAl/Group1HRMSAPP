@@ -85,7 +85,6 @@ public class BenefitServiceImpl implements BenefitService{
     @Override
     public void saveBenefit(Benefit benefit) {
         benefitRepository.save(benefit);
-
     }
 
     /**
