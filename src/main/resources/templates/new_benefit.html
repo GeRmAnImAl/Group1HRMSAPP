@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Human Resource Management System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+  <h1>Create Benefit</h1>
+
+  <form action="#" th:action="@{/saveBenefit}" th:object="${benefit}"
+        method="POST">
+
+    <div class="col">
+      <label for="coverageType" class="form-label">Coverage Type:</label>
+      <select class="form-select" id="coverageType" name="coverageType" required>
+        <option value="" disabled>-- Choose Coverage Type --</option>
+        <option th:each="coverageType : ${T(com.example.group1hrmsapp.model.CoverageType).values()}"
+                th:value="${coverageType.name()}" th:text="${coverageType.name()}"></option>
+      </select>
+    </div>
+
+    <div class="col">
+      <label for="coverageProvider" class="form-label">Coverage Provider:</label>
+      <select class="form-select" id="coverageProvider" name="coverageProvider" required>
+        <option value="" disabled>-- Choose Provider --</option>
+        <option th:each="provider : ${T(com.example.group1hrmsapp.model.CoverageProvider).values()}"
+                th:value="${provider.name()}" th:text="${provider.name()}"></option>
+      </select>
+    </div>
+
+    <div class="mt-4">
+      <label for="benefitName" class="form-label">Benefit Name</label>
+      <input type="text" id="benefitName" th:field="*{benefitName}"
+             class="form-control mb-4 col-4" required>
+
+      <label for="benefitDesc" class="form-label">Benefit Description:</label>
+      <textarea id="benefitDesc" th:field="*{benefitDesc}"
+                class="form-control mb-4 col-4" rows="4" required></textarea>
+
+      <label for="benefitCost" class="form-label">Benefit Cost $:</label>
+      <input type="text" id="benefitCost" th:field="*{benefitCost}"
+             class="form-control mb-4 col-4" required>
+
+      <button type="submit" class="btn btn-info col-2">Save</button>
+      <a href="#" th:href="@{/benefitsList}" class="btn btn-danger col-2 ml-2">Cancel</a>
+    </div>
+  </form>
+</div>
+</body>
+</html>

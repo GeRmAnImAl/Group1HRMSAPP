@@ -19,12 +19,8 @@ public class Benefit implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "coverage_type")
     private CoverageType coverageType;
-    @Column(name = "coverage_start_date")
-    private String startDate;
-    @Column(name = "coverage_end_date")
-    private String endDate;
     @Column(name = "cost")
-    private double benefitCost;
+    private Double benefitCost;
     @Enumerated(EnumType.STRING)
     @Column(name = "provider")
     private CoverageProvider coverageProvider;
@@ -94,42 +90,10 @@ public class Benefit implements Serializable {
     }
 
     /**
-     * Returns the start date of the benefit coverage.
-     * @return the benefit coverage start date
-     */
-    public String getStartDate() {
-        return startDate;
-    }
-
-    /**
-     * Sets the start date of the benefit coverage.
-     * @param startDate the benefit coverage start date to set
-     */
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    /**
-     * Returns the end date of the benefit coverage.
-     * @return the benefit coverage end date
-     */
-    public String getEndDate() {
-        return endDate;
-    }
-
-    /**
-     * Sets the end date of the benefit coverage.
-     * @param endDate the benefit coverage end date to set
-     */
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
-
-    /**
      * Returns the cost of the benefit.
      * @return the benefit cost
      */
-    public double getBenefitCost() {
+    public Double getBenefitCost() {
         return benefitCost;
     }
 
@@ -137,7 +101,7 @@ public class Benefit implements Serializable {
      * Sets the cost of the benefit.
      * @param benefitCost the benefit cost to set
      */
-    public void setBenefitCost(double benefitCost) {
+    public void setBenefitCost(Double benefitCost) {
         this.benefitCost = benefitCost;
     }
 

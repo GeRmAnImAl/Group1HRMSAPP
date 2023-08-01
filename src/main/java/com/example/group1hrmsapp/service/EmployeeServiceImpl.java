@@ -105,7 +105,6 @@ public class EmployeeServiceImpl implements EmployeeService{
     @Transactional
     @Override
     public void updateEmployee(Employee employee) {
-        Employee savedEmployee = this.employeeRepository.save(employee);
 
         switch (employee.getSpecialType()){
             case MANAGER:
@@ -120,6 +119,7 @@ public class EmployeeServiceImpl implements EmployeeService{
                 break;
         }
 
+        Employee savedEmployee = this.employeeRepository.save(employee);
         // Add Employee as a subordinate of a Manager if one has been selected.
         Employee manager = savedEmployee.getManager();
         if(manager != null && manager.getSpecialType() == SpecialType.MANAGER){

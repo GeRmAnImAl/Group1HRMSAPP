@@ -1,7 +1,9 @@
 package com.example.group1hrmsapp.service;
 
-import com.example.group1hrmsapp.model.Benefit;
+import com.example.group1hrmsapp.model.*;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
@@ -15,6 +17,8 @@ public interface BenefitService {
      * @return a list of Benefit Objects.
      */
     List<Benefit> getAllBenefits();
+
+    void createBenefit(Benefit benefit);
 
     /**
      * Retrieves a Benefit by a specific ID number.
@@ -41,6 +45,9 @@ public interface BenefitService {
      */
     void deleteBenefitById(Long id);
 
+    boolean enrollInBenefit(Long benefitId);
+    boolean withdrawFromBenefit(Long benefitId);
+
     /**
      * Retrieves a paginated list of Benefits sorted by a specific field and direction.
      * @param pageNo The page number to retrieve, starting from 1.
@@ -50,4 +57,10 @@ public interface BenefitService {
      * @return A Page of Benefits based on the given page number and size, sorted by the given field and direction.
      */
     Page<Benefit> findPaginated(int pageNo, int pageSize, String sortField, String sortDirection);
+
+
+    Page<Benefit> findFilteredAndPaginated(Specification<Benefit> spec, Pageable pageable);
+
+    Specification<Benefit> prepareSpecification(String coverageType, String benefitName, Double cost, String coverageProvider);
+    Employee getLoggedInUser();
 }
