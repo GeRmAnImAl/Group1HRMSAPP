@@ -10,8 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
-
 @Controller
 public class UserController {
 
@@ -56,7 +54,7 @@ public class UserController {
         String loggedInUsername = auth.getName();
 
         // Fetch the AppUser entity associated with the username
-        AppUser loggedInUser = userRepository.findById(loggedInUsername)
+        AppUser loggedInUser = userRepository.findByUserName(loggedInUsername)
                 .orElseThrow(() -> new RuntimeException("No user logged in"));
         String username = loggedInUser.getUserName();
 

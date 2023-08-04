@@ -17,7 +17,6 @@ public class AppUser implements Serializable {
     @Enumerated(value = EnumType.STRING)
     @Column(name = "access_level")
     private AccessLevel accessLevel;
-    @BooleanFlag
     @Column(name = "first_access")
     private boolean firstTimeLogin;
 

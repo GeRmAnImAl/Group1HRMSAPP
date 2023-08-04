@@ -2,7 +2,9 @@ package com.example.group1hrmsapp.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,18 +18,19 @@ public class TrainingModule implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(name = "name")
     private String moduleName;
-
     @Column(name = "module_info", columnDefinition = "TEXT")
     private String moduleInfo;
-
     @ElementCollection
     @MapKeyColumn(name="question")
     @Column(name="answer")
     @CollectionTable(name="quiz", joinColumns=@JoinColumn(name="module_id"))
     private Map<String, String> quiz = new HashMap<>();
+    @Transient
+    private List<String> questions = new ArrayList<>();
+    @Transient
+    private List<String> answers = new ArrayList<>();
 
     /**
      * Default constructor.
@@ -105,5 +108,21 @@ public class TrainingModule implements Serializable {
      */
     public void addQuestionAnswer(String question, String answer) {
         this.quiz.put(question, answer);
+    }
+
+    public List<String> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<String> questions) {
+        this.questions = questions;
+    }
+
+    public List<String> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<String> answers) {
+        this.answers = answers;
     }
 }

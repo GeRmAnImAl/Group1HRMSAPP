@@ -17,8 +17,7 @@ public interface UserRepository extends JpaRepository<AppUser, String> {
      * @param userName String representing the AppUser in the database.
      * @return an AppUser Object.
      */
-    @Override
-    Optional<AppUser> findById(String userName);
+    Optional<AppUser> findByUserName(String userName);
 
 
 }

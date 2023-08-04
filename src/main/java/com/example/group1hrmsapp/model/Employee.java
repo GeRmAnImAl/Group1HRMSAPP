@@ -453,10 +453,10 @@ public class Employee implements Serializable, Observer {
 
     /**
      * Sets the list of completed training modules for this Employee.
-     * @param completedTrainings A Map containing TrainingModule objects and their completion status to set for the Employee.
+     * @param assignedTrainings A Map containing TrainingModule objects and their completion status to set for the Employee.
      */
-    public void setAssignedTrainings(Map<TrainingModule, Boolean> completedTrainings) {
-        this.assignedTrainings = completedTrainings;
+    public void setAssignedTrainings(Map<TrainingModule, Boolean> assignedTrainings) {
+        this.assignedTrainings = assignedTrainings;
     }
 
     /**

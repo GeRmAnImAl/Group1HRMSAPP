@@ -2,7 +2,6 @@ package com.example.group1hrmsapp.service;
 
 import com.example.group1hrmsapp.model.*;
 import com.example.group1hrmsapp.repository.*;
-import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -77,7 +76,7 @@ public class PaymentServiceImpl implements PaymentService{
     public Employee getLoggedInUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String loggedInUsername = auth.getName();
-        AppUser loggedInUser = userRepository.findById(loggedInUsername)
+        AppUser loggedInUser = userRepository.findByUserName(loggedInUsername)
                 .orElseThrow(()-> new RuntimeException("No user logged in"));
 
         return loggedInUser.getEmployee();

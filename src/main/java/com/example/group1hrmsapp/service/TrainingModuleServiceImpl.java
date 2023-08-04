@@ -14,10 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class TrainingModuleServiceImpl implements TrainingModuleService{
@@ -25,6 +22,8 @@ public class TrainingModuleServiceImpl implements TrainingModuleService{
     private TrainingModuleRepository trainingModuleRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private EmployeeService employeeService;
 
 
     @Override
@@ -48,20 +47,30 @@ public class TrainingModuleServiceImpl implements TrainingModuleService{
     }
 
     @Override
-    public void updateTrainingModule(Long id, TrainingModule trainingModule) {
-        TrainingModule originalTraining = trainingModuleRepository.findById(id)
+    public void updateTrainingModule(TrainingModule trainingModule) {
+        TrainingModule originalTraining = trainingModuleRepository.findById(trainingModule.getId())
                 .orElseThrow(()-> new RuntimeException("No Training Module with That ID"));
 
         originalTraining.setModuleName(trainingModule.getModuleName());
         originalTraining.setModuleInfo(trainingModule.getModuleInfo());
-        originalTraining.setQuiz(trainingModule.getQuiz());
+
+        // Reconstruct the quiz map
+        Map<String, String> newQuiz = new HashMap<>();
+        List<String> questions = trainingModule.getQuestions();
+        List<String> answers = trainingModule.getAnswers();
+
+        for (int i = 0; i < questions.size(); i++) {
+            newQuiz.put(questions.get(i), answers.get(i));
+        }
+
+        originalTraining.setQuiz(newQuiz);
 
         trainingModuleRepository.save(originalTraining);
     }
 
+
     @Override
     public void deleteTrainingModuleById(Long id){
-        trainingModuleRepository.deleteById(id);
         Optional<TrainingModule> optionalTrainingModule = trainingModuleRepository.findById(id);
         if (optionalTrainingModule.isPresent()) {
             TrainingModule trainingModuleToDelete = optionalTrainingModule.get();
@@ -98,7 +107,7 @@ public class TrainingModuleServiceImpl implements TrainingModuleService{
     public Employee getLoggedInUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String loggedInUsername = auth.getName();
-        AppUser loggedInUser = userRepository.findById(loggedInUsername)
+        AppUser loggedInUser = userRepository.findByUserName(loggedInUsername)
                 .orElseThrow(()-> new RuntimeException("No user logged in"));
 
         return loggedInUser.getEmployee();
@@ -137,5 +146,21 @@ public class TrainingModuleServiceImpl implements TrainingModuleService{
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
+    }
+
+    @Override
+    public void assignTraining(List<Long> employeeIds, Long trainingId) {
+        TrainingModule trainingModule = this.getTrainingModuleById(trainingId);
+
+        for(Long id : employeeIds){
+            Employee employee = employeeService.getEmployeeById(id);
+            employee.getAssignedTrainings().put(trainingModule, false);
+            employeeService.saveEmployee(employee);
+        }
+    }
+
+    @Override
+    public void saveTraining(TrainingModule training) {
+        trainingModuleRepository.save(training);
     }
 }

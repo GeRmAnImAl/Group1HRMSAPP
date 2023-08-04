@@ -81,7 +81,7 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
         String loggedInUsername = auth.getName();
 
         // Fetch the AppUser entity associated with the username
-        AppUser loggedInUser = userRepository.findById(loggedInUsername)
+        AppUser loggedInUser = userRepository.findByUserName(loggedInUsername)
                 .orElseThrow(() -> new RuntimeException("No user logged in"));
 
         // Fetch the Employee entity associated with the AppUser
@@ -113,7 +113,7 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String loggedInUsername = auth.getName();
         // Fetch the AppUser entity associated with the username
-        AppUser loggedInUser = userRepository.findById(loggedInUsername)
+        AppUser loggedInUser = userRepository.findByUserName(loggedInUsername)
                 .orElseThrow(() -> new RuntimeException("No user logged in"));
         // Fetch the Employee entity associated with the AppUser
         Employee loggedInEmployee = loggedInUser.getEmployee();
@@ -158,7 +158,7 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
         String loggedInUsername = auth.getName();
 
         // Fetch the AppUser entity associated with the username
-        AppUser loggedInUser = userRepository.findById(loggedInUsername)
+        AppUser loggedInUser = userRepository.findByUserName(loggedInUsername)
                 .orElseThrow(() -> new RuntimeException("No user logged in"));
 
         // Fetch the Employee entity associated with the AppUser

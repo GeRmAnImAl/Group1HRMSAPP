@@ -10,7 +10,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -29,7 +28,7 @@ public class UserServiceImpl implements UserService{
      */
     @Override
     public AppUser getUserById(String userName) {
-        Optional<AppUser> optional = userRepository.findById(userName);
+        Optional<AppUser> optional = userRepository.findByUserName(userName);
         AppUser appUser = null;
         if(optional.isPresent()){
             appUser = optional.get();
@@ -103,7 +102,7 @@ public class UserServiceImpl implements UserService{
         String loggedInUsername = auth.getName();
 
         // Fetch the AppUser entity associated with the username
-        AppUser loggedInUser = userRepository.findById(loggedInUsername)
+        AppUser loggedInUser = userRepository.findByUserName(loggedInUsername)
                 .orElseThrow(() -> new RuntimeException("No user logged in"));
 
         // Verify that the current password matches the user's actual password

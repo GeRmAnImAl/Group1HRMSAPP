@@ -30,7 +30,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         String loggedInUsername = auth.getName();
 
         // Fetch the AppUser entity associated with the username
-        AppUser loggedInUser = userRepository.findById(loggedInUsername)
+        AppUser loggedInUser = userRepository.findByUserName(loggedInUsername)
                 .orElseThrow(() -> new RuntimeException("No user logged in"));
         // Check if it's the first time login
         boolean isFirstTimeLogin = loggedInUser.isFirstTimeLogin();

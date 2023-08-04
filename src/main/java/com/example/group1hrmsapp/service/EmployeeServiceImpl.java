@@ -140,7 +140,7 @@ public class EmployeeServiceImpl implements EmployeeService{
             Employee employeeToDelete = optionalEmployee.get();
 
             if (employeeToDelete.getAppUser() != null) {
-                Optional<AppUser> optionalAppUser = userRepository.findById(employeeToDelete.getAppUser().getUserName());
+                Optional<AppUser> optionalAppUser = userRepository.findByUserName(employeeToDelete.getAppUser().getUserName());
                 if (optionalAppUser.isPresent()) {
 
                     userRepository.delete(optionalAppUser.get());

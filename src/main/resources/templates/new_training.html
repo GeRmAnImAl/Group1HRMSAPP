@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+  <meta charset="UTF-8">
+  <title>Human Resource Management System</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<div class="container">
+  <h1>Create Module</h1>
+
+  <form id="myForm" action="#" th:action="@{/saveTrainingModule}" th:object="${trainingModule}" method="POST">
+
+    <div class="col">
+      <div class="mt-4">
+        <label for="moduleName" class="form-label">Module Name:</label>
+        <input type="text" id="moduleName" th:field="*{moduleName}"
+               class="form-control mb-4 col-4" required>
+
+        <label for="moduleInfo" class="form-label">Module Information:</label>
+        <textarea id="moduleInfo" th:field="*{moduleInfo}"
+                  class="form-control mb-4 col-4" rows="4" required></textarea>
+
+        <label for="numQuestions" class="form-label">Number of Questions:</label>
+        <input type="number" id="numQuestions" class="form-control mb-4 col-4">
+
+        <div id="qa-container"></div>
+
+        <button type="submit" class="btn btn-info col-2">Save</button>
+        <a href="#" th:href="@{/trainingsList}" class="btn btn-danger col-2 ml-2">Cancel</a>
+      </div>
+    </div>
+  </form>
+
+  <script>
+    $(document).ready(function(){
+      $('#numQuestions').change(function(){
+        var numQuestions = $(this).val();
+        $('#qa-container').empty();
+
+        for(let i=0; i<numQuestions; i++){
+          var questionHTML = '<div class="mt-4"><label for="question'+ i +'">Question ' + (i+1) + '</label><input type="text" id="question'+ i +'" name="quiz[question'+ i +']" class="form-control mb-4 col-4"></div>';
+          var answerHTML = '<div class="mt-4"><label for="answer'+ i +'">Answer ' + (i+1) + '</label><input type="text" id="answer'+ i +'" name="quiz[answer'+ i +']" class="form-control mb-4 col-4"></div>';
+          $('#qa-container').append(questionHTML + answerHTML);
+        }
+      });
+    });
+  </script>
+
+</div>
+</body>
+</html>

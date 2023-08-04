@@ -14,7 +14,7 @@ public interface TrainingModuleService {
     List<TrainingModule> getAllTrainingModules();
     TrainingModule getTrainingModuleById(Long id);
     TrainingModule createTrainingModule(TrainingModule trainingModule);
-    void updateTrainingModule(Long id, TrainingModule trainingModule);
+    void updateTrainingModule(TrainingModule trainingModule);
     void deleteTrainingModuleById(Long id);
     List<TrainingModule> getCompletedTrainingModulesByEmployee(Employee employee);
     void markTrainingAsCompleted(Employee employee, TrainingModule trainingModule);
@@ -23,4 +23,7 @@ public interface TrainingModuleService {
     Page<TrainingModule> findFilteredAndPaginated(Specification<TrainingModule> spec, Pageable pageable);
     Specification<TrainingModule> prepareSpecification(String moduleName, Boolean assigned, Boolean completed);
 
+    void assignTraining(List<Long> employeeIds, Long trainingId);
+
+    void saveTraining(TrainingModule training);
 }

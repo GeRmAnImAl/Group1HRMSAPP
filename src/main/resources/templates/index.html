@@ -4,21 +4,32 @@
     <meta charset="UTF-8">
     <title>Employee Records</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    <style>
+        .btn {
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container my-2">
+<div class="container my-2">
+    <form th:action="@{/logout}" method="post">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+        <button type="submit" class="btn btn-primary btn-sm">Logout</button>
+    </form>
 
-        <form th:action="@{/logout}" method="post">
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-            <button type="submit" class="btn btn-primary btn-sm">Logout</button>
-        </form>
-        <a th:href="@{/showChangePasswordForm}" class="btn btn-primary">Change Password</a>
-
-        <a th:href="@{/employeeList}" class="btn btn-primary">View Employee List</a>
-        <a th:href="@{/timeOffRequestList}" class="btn btn-primary">View Time Off Requests</a>
-        <a th:href="@{/workedHoursList}" class="btn btn-primary">View Worked Hours</a>
-        <a th:href="@{/benefitsList}" class="btn btn-primary">View Benefits List</a>
-        <a th:href="@{/paymentsList}" class="btn btn-primary">Pending Payments</a>
+    <div class="row">
+        <div class="col-12">
+            <a th:href="@{/benefitsList}" class="btn btn-primary">View Benefits List</a>
+            <a th:href="@{/changePassword}" class="btn btn-primary">Change Password</a>
+            <a th:href="@{/employeeList}" class="btn btn-primary">View Employee List</a>
+        </div>
+        <div class="col-12">
+            <a th:href="@{/paymentsList}" class="btn btn-primary">Pending Payments</a>
+            <a th:href="@{/timeOffRequestList}" class="btn btn-primary">View Time Off Requests</a>
+            <a th:href="@{/trainingsList}" class="btn btn-primary">Training Modules</a>
+            <a th:href="@{/workedHoursList}" class="btn btn-primary">View Worked Hours</a>
+        </div>
     </div>
+</div>
 </body>
 </html>

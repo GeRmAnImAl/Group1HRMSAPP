@@ -14,7 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -49,7 +48,7 @@ public class BenefitServiceImpl implements BenefitService{
     public void createBenefit(Benefit benefit) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String loggedInUsername = auth.getName();
-        AppUser loggedInUser = userRepository.findById(loggedInUsername)
+        AppUser loggedInUser = userRepository.findByUserName(loggedInUsername)
                 .orElseThrow(()-> new RuntimeException("No user logged in"));
         Employee loggedInEmployee = loggedInUser.getEmployee();
         if(!loggedInEmployee.getSpecialType().equals(SpecialType.HR)){
@@ -117,7 +116,7 @@ public class BenefitServiceImpl implements BenefitService{
     public boolean enrollInBenefit(Long benefitId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String loggedInUsername = auth.getName();
-        AppUser loggedInUser = userRepository.findById(loggedInUsername)
+        AppUser loggedInUser = userRepository.findByUserName(loggedInUsername)
                 .orElseThrow(()-> new RuntimeException("No user logged in"));
         Employee loggedInEmployee = loggedInUser.getEmployee();
         Benefit benefit = benefitRepository.findById(benefitId)
@@ -136,7 +135,7 @@ public class BenefitServiceImpl implements BenefitService{
     public boolean withdrawFromBenefit(Long benefitId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String loggedInUsername = auth.getName();
-        AppUser loggedInUser = userRepository.findById(loggedInUsername)
+        AppUser loggedInUser = userRepository.findByUserName(loggedInUsername)
                 .orElseThrow(()-> new RuntimeException("No user logged in"));
         Employee loggedInEmployee = loggedInUser.getEmployee();
         Benefit benefit = benefitRepository.findById(benefitId)
@@ -206,7 +205,7 @@ public class BenefitServiceImpl implements BenefitService{
     public Employee getLoggedInUser(){
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     String loggedInUsername = auth.getName();
-    AppUser loggedInUser = userRepository.findById(loggedInUsername)
+    AppUser loggedInUser = userRepository.findByUserName(loggedInUsername)
             .orElseThrow(()-> new RuntimeException("No user logged in"));
 
     return loggedInUser.getEmployee();

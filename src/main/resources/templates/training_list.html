@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+  <meta charset="UTF-8">
+  <title>Human Resource Management System</title>
+</head>
+<body>
+<div class="container my-2">
+  <a th:href="@{/}">Back to Home</a>
+  <h1>Training Modules</h1>
+
+  <!-- Filter Form -->
+  <form th:action="@{/filterTrainings}" method="post" class="mb-3">
+    <div class="row">
+      <div class="col">
+        <label for="moduleName" class="form-label">Module Name:</label>
+        <input type="text" class="form-control" id="moduleName" name="moduleName">
+      </div>
+      <div class="col">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="assigned" name="assigned" value="true">
+          <label class="form-check-label" for="assigned">Assigned</label>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="completed" name="completed" value="true">
+          <label class="form-check-label" for="completed">Completed</label>
+        </div>
+      </div>
+
+      <!-- Add More Filter Fields As Necessary  -->
+    </div>
+    <div class="row mt-3">
+      <div class="col">
+        <!-- Add More Filter Fields As Necessary  -->
+      </div>
+      <div class="col">
+        <button type="submit" class="btn btn-primary mt-4">Apply Filters</button>
+        <a th:href="@{/clearTrainingsFilters}" class="btn btn-secondary mt-4">Clear Filters</a>
+
+      </div>
+    </div>
+  </form>
+
+  <!-- Time Off Request Table -->
+  <table class="table table-striped table-responsive-md">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Assigned</th>
+      <th>Completion Status</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="training: ${listTrainings}">
+      <td th:text="${training.id}"></td>
+      <td th:text="${training.moduleName}"></td>
+      <td th:text="${loggedInEmployee != null && loggedInEmployee.getAssignedTrainings().get(training) != null ? 'Yes' : 'No'}"></td>
+      <td th:text="${loggedInEmployee != null && loggedInEmployee.getTrainingStatus(training) ? 'Completed' : 'Incomplete'}"></td>
+
+      <td>
+        <div class="mb-2">
+          <a th:href="@{/trainingDisplay/{id}(id=${training.id})}" class="btn btn-primary">Begin</a>
+          <a th:if="${loggedInEmployee.getSpecialType().toString() == 'MANAGER'}"
+             th:href="@{/showAssignTraining/{id}(id=${training.id})}" class="btn btn-primary">Assign</a>
+        </div>
+        <div>
+          <a th:if="${loggedInEmployee.getSpecialType().toString() == 'HR'}"
+             th:href="@{/showUpdateTrainingForm/{id}(id=${training.id})}" class="btn btn-primary">Update</a>
+          <a th:if="${loggedInEmployee.getSpecialType().toString() == 'HR'}"
+             th:href="@{/deleteTraining/{id}(id=${training.id})}" class="btn btn-danger">Delete</a>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <!-- Pagination Links -->
+  <nav aria-label="Page navigation" th:if="${totalPages > 0}">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" th:classappend="${currentPage == 1} ? disabled">
+        <a class="page-link"
+           th:href="@{/requestPage/1(size=${totalItems}, sortField=${sortField}, sortDir=${sortDir})}"
+           tabindex="-1">First</a>
+      </li>
+      <li class="page-item" th:classappend="${currentPage == 1} ? disabled">
+        <a class="page-link"
+           th:if="${currentPage > 1}"
+           th:href="@{/requestPage/(pageNo=${currentPage - 1}, size=${totalItems}, sortField=${sortField}, sortDir=${sortDir})}"
+           tabindex="-1">Previous</a>
+      </li>
+      <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, totalPages)}">
+        <a class="page-link"
+           th:href="@{/requestPage/(pageNo=${pageNumber}, size=${totalItems}, sortField=${sortField}, sortDir=${sortDir})}"
+           th:classappend="${pageNumber == currentPage} ? active" th:text="${pageNumber}"></a>
+      </li>
+      <li class="page-item" th:classappend="${currentPage == totalPages} ? disabled">
+        <a class="page-link"
+           th:if="${currentPage < totalPages}"
+           th:href="@{/requestPage/(pageNo=${currentPage + 1}, size=${totalItems}, sortField=${sortField}, sortDir=${sortDir})}">Next</a>
+      </li>
+      <li class="page-item" th:classappend="${currentPage == totalPages} ? disabled">
+        <a class="page-link"
+           th:href="@{/requestPage/(pageNo=${totalPages}, size=${totalItems}, sortField=${sortField}, sortDir=${sortDir})}">Last</a>
+      </li>
+    </ul>
+  </nav>
+
+
+
+  <a th:if="${loggedInEmployee.getSpecialType().toString() == 'HR'}"
+     th:href="@{/showNewTrainingForm}" class="btn btn-primary btn-sm">Create New Training</a>
+</div>
+</body>
+</html>

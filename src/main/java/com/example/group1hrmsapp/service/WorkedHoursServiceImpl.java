@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -43,7 +42,7 @@ public class WorkedHoursServiceImpl implements WorkedHoursService{
     public void createWorkedHours(WorkedHours workedHours) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String loggedInUsername = auth.getName();
-        AppUser loggedInUser = userRepository.findById(loggedInUsername)
+        AppUser loggedInUser = userRepository.findByUserName(loggedInUsername)
                 .orElseThrow(()-> new RuntimeException("No user logged in"));
         Employee loggedInEmployee = loggedInUser.getEmployee();
         workedHours.setEmployee(loggedInEmployee);
@@ -57,7 +56,7 @@ public class WorkedHoursServiceImpl implements WorkedHoursService{
     public WorkedHours cancelWorkedHours(Long workedHoursId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String loggedInUsername = auth.getName();
-        AppUser loggedInUser = userRepository.findById(loggedInUsername)
+        AppUser loggedInUser = userRepository.findByUserName(loggedInUsername)
                 .orElseThrow(()-> new RuntimeException("No user logged in"));
         Employee loggedInEmployee = loggedInUser.getEmployee();
         WorkedHours workedHours = workedHoursRepository.findById(workedHoursId)
@@ -88,7 +87,7 @@ public class WorkedHoursServiceImpl implements WorkedHoursService{
     public WorkedHours approveWorkedHours(Long workedHoursId, Long managerId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String loggedInUsername = auth.getName();
-        AppUser loggedInUser = userRepository.findById(loggedInUsername)
+        AppUser loggedInUser = userRepository.findByUserName(loggedInUsername)
                 .orElseThrow(()-> new RuntimeException("No user logged in"));
         Employee loggedInEmployee = loggedInUser.getEmployee();
         WorkedHours workedHours = workedHoursRepository.findById(workedHoursId)
@@ -142,7 +141,7 @@ public class WorkedHoursServiceImpl implements WorkedHoursService{
     public WorkedHours rejectWorkedHours(Long workedHoursId, Long managerId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String loggedInUsername = auth.getName();
-        AppUser loggedInUser = userRepository.findById(loggedInUsername)
+        AppUser loggedInUser = userRepository.findByUserName(loggedInUsername)
                 .orElseThrow(()-> new RuntimeException("No user logged in"));
         Employee loggedInEmployee = loggedInUser.getEmployee();
         WorkedHours workedHours = workedHoursRepository.findById(workedHoursId)
