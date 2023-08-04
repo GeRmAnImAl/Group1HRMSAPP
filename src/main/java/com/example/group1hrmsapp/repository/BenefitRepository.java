@@ -1,7 +1,6 @@
 package com.example.group1hrmsapp.repository;
 
 import com.example.group1hrmsapp.model.Benefit;
-import com.example.group1hrmsapp.model.WorkedHours;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

@@ -63,6 +63,12 @@ public class Employee implements Serializable, Observer {
     @MapKeyColumn(name = "benefit_id")
     @Column(name = "benefit_date")
     private Map<Benefit, LocalDate> benefitList = new HashMap<>();
+    @ElementCollection
+    @CollectionTable(name = "assigned_trainings", joinColumns = @JoinColumn(name = "employee_id"))
+    @MapKeyJoinColumn(name = "training_id")
+    @Column(name = "assigned")
+    private Map<TrainingModule, Boolean> assignedTrainings = new HashMap<>();
+
 
     /**
      * Retrieves the ID of this Employee.
@@ -436,8 +442,50 @@ public class Employee implements Serializable, Observer {
         this.subordinates.remove(employee);
     }
 
+    /**
+     * Retrieves the list of completed training modules for this Employee.
+     * @return A Map containing TrainingModule objects and their completion status. If the value is true,
+     * the training module has been completed by the Employee, otherwise it has not been completed.
+     */
+    public Map<TrainingModule, Boolean> getAssignedTrainings() {
+        return assignedTrainings;
+    }
+
+    /**
+     * Sets the list of completed training modules for this Employee.
+     * @param completedTrainings A Map containing TrainingModule objects and their completion status to set for the Employee.
+     */
+    public void setAssignedTrainings(Map<TrainingModule, Boolean> completedTrainings) {
+        this.assignedTrainings = completedTrainings;
+    }
+
+    /**
+     * Updates the completion status of a specific training module for this Employee.
+     * @param trainingModule The TrainingModule whose status should be updated.
+     * @param status The new completion status for the TrainingModule.
+     */
+    public void updateTrainingStatus(TrainingModule trainingModule, Boolean status) {
+        this.assignedTrainings.put(trainingModule, status);
+    }
+
+    /**
+     * Retrieves the completion status of a specific training module for this Employee.
+     * @param trainingModule The TrainingModule whose status should be retrieved.
+     * @return The completion status of the specified TrainingModule. If the TrainingModule has not been added to
+     * the Employee's completedTrainings Map, it will return false by default.
+     */
+    public Boolean getTrainingStatus(TrainingModule trainingModule) {
+        return this.assignedTrainings.getOrDefault(trainingModule, false);
+    }
+
+    /**
+     * Provides a String representation of the Employee object,
+     * detailing the employee's full name, ID, and associated username.
+     * @return A String detailing the employee's full name, ID, and associated username.
+     */
     @Override
     public String toString(){
         return "Employee Name: " + this.getFullName() + " | Employee ID: " + this.getId() + " | Associated AppUser: " + this.getAppUser().getUserName();
     }
+
 }
