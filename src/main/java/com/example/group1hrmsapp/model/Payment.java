@@ -88,10 +88,18 @@ public class Payment implements Serializable {
         this.paymentAmount = paymentAmount;
     }
 
+    /**
+     * Retrieves the current payment status.
+     * @return the current payment status.
+     */
     public PaymentStatus getPaymentStatus() {
         return paymentStatus;
     }
 
+    /**
+     * Sets the payment status.
+     * @param paymentStatus The desired payment status to set.
+     */
     public void setPaymentStatus(PaymentStatus paymentStatus) {
         this.paymentStatus = paymentStatus;
     }

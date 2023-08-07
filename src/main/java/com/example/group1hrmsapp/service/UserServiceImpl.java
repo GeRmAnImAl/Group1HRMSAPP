@@ -2,8 +2,6 @@ package com.example.group1hrmsapp.service;
 
 import com.example.group1hrmsapp.model.AppUser;
 import com.example.group1hrmsapp.repository.UserRepository;
-//import io.jsonwebtoken.Jwts;
-//import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,6 +10,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Service implementation for handling user-related operations in the HRMS application.
+ * This service contains methods for retrieving, creating, updating, and deleting AppUser entities.
+ * It also provides functionality for encoding passwords and authenticating users.
+ */
 @Service
 public class UserServiceImpl implements UserService{
 
@@ -68,23 +71,6 @@ public class UserServiceImpl implements UserService{
     }
 
     /**
-     * Generates a JWT token for the provided username. The token will expire one hour after its creation time.
-     * @param username The username for which to generate a JWT token.
-     * @return A JWT token as a string, signed with HS512 algorithm and the provided secret key.
-     */
-    /*@Override
-    public String generateJwtToken(String username) {
-        long expirationMillis = System.currentTimeMillis() + (60 * 60 * 1000);
-
-        return Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(expirationMillis))
-                .signWith(SignatureAlgorithm.HS512, "secretKey")
-                .compact();
-    }*/
-
-    /**
      * Creates and saves a new AppUser entity to the repository. The password will be encoded before the user is saved.
      * @param username The username for the new AppUser.
      * @param password The password for the new AppUser. This should be in plain text, as the method will handle password encoding.
@@ -96,6 +82,15 @@ public class UserServiceImpl implements UserService{
         userRepository.save(appUser);
     }
 
+    /**
+     * Changes the password of the AppUser with the given username.
+     * Verifies the current password before updating to the new password.
+     * @param username The username of the AppUser whose password needs to be changed.
+     * @param currentPassword The current password of the AppUser.
+     * @param newPassword The new password for the AppUser.
+     * @return true if the password is successfully changed, false otherwise.
+     * @throws RuntimeException If no user is currently logged in.
+     */
     @Override
     public boolean changePassword(String username, String currentPassword, String newPassword) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

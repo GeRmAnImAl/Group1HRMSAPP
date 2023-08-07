@@ -13,15 +13,33 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Customizes the behavior of successful authentication in the application.
+ * It checks whether a user logs in for the first time and redirects to a
+ * password change form if true, or to the main dashboard otherwise.
+ */
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     private UserRepository userRepository;
 
+    /**
+     * Constructs a new CustomAuthenticationSuccessHandler.
+     * @param userRepository the user repository used to fetch user details.
+     */
     @Autowired
     public CustomAuthenticationSuccessHandler(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Handles the behavior after a successful authentication. Redirects users
+     * to specific pages based on whether it's their first time logging in.
+     * @param request the servlet request.
+     * @param response the servlet response.
+     * @param authentication the current authentication object.
+     * @throws IOException in case of IO errors.
+     * @throws ServletException in case of servlet errors.
+     */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {

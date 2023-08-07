@@ -102,6 +102,22 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     }
 
+    /**
+     * Updates an existing {@link Employee} record in the database based on the provided Employee object.
+     * <p>
+     * The method first sets the appropriate access level for the employee based on their special type
+     * (e.g., MANAGER, HR). If the employee's special type is set to MANAGER, their access level is set
+     * to HIGH. If it's set to HR, the access level is set to MEDIUM. Otherwise, it defaults to LOW.
+     * </p>
+     * <p>
+     * After updating the access level, the method saves the updated employee in the database. If the
+     * employee has a manager assigned and that manager has a special type of MANAGER, the updated employee
+     * is added as a subordinate to that manager and the manager's record is also updated in the database.
+     * </p>
+     *
+     * @param employee The Employee object containing updated information. Must not be null.
+     * @throws IllegalArgumentException If the provided Employee object is invalid.
+     */
     @Transactional
     @Override
     public void updateEmployee(Employee employee) {

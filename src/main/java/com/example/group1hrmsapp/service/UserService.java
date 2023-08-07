@@ -3,7 +3,7 @@ package com.example.group1hrmsapp.service;
 import com.example.group1hrmsapp.model.AppUser;
 
 /**
- *
+ * Service interface to manage user operations within the HRMS application.
  */
 public interface UserService {
     /**
@@ -33,11 +33,13 @@ public interface UserService {
     Object getAllUsers();
 
     /**
-     * Generates a JWT token for the provided username. The token will expire one hour after its creation time.
-     * @param username The username for which to generate a JWT token.
-     * @return A JWT token as a string, signed with HS512 algorithm and the provided secret key.
+     * Changes the password of the AppUser with the given username.
+     * Verifies the current password before updating to the new password.
+     * @param username The username of the AppUser whose password needs to be changed.
+     * @param currentPassword The current password of the AppUser.
+     * @param newPassword The new password for the AppUser.
+     * @return true if the password is successfully changed, false otherwise.
+     * @throws RuntimeException If no user is currently logged in.
      */
-    //String generateJwtToken(String username);
-
     boolean changePassword(String username, String currentPassword, String newPassword);
 }

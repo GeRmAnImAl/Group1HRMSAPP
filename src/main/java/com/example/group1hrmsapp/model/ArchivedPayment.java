@@ -98,10 +98,18 @@ public class ArchivedPayment implements Serializable {
         this.paymentAmount = paymentAmount;
     }
 
+    /**
+     * Retrieves the payment status of the entity.
+     * @return the current payment status.
+     */
     public PaymentStatus getPaymentStatus() {
         return paymentStatus;
     }
 
+    /**
+     * Updates the payment status of the entity.
+     * @param paymentStatus the new payment status to set.
+     */
     public void setPaymentStatus(PaymentStatus paymentStatus) {
         this.paymentStatus = paymentStatus;
     }

@@ -210,8 +210,6 @@ public class TimeOffRequestController {
      */
     @GetMapping("/clearRequestFilters")
     public String clearFilters(RedirectAttributes redirectAttributes) {
-        // Redirect to the filter page after clearing the filters
-        // You can set any default filter values you want here
         redirectAttributes.addAttribute("startDate", "");
         redirectAttributes.addAttribute("endDate", "");
         redirectAttributes.addAttribute("timeOffType", "");

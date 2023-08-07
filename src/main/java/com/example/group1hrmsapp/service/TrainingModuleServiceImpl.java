@@ -19,6 +19,13 @@ import javax.persistence.criteria.Predicate;
 import java.util.*;
 import java.util.logging.Logger;
 
+/**
+ * Service implementation for managing training module operations.
+ * Provides functionalities to manage training modules such as fetching all training modules,
+ * getting a module by ID, creating, updating, and deleting a module. Also, includes functionalities
+ * related to marking trainings as completed, getting completed trainings of an employee, and other relevant
+ * operations.
+ */
 @Service
 public class TrainingModuleServiceImpl implements TrainingModuleService{
     @Autowired
@@ -30,13 +37,23 @@ public class TrainingModuleServiceImpl implements TrainingModuleService{
 
     private static final Logger LOGGER = Logger.getLogger(TrainingModuleController.class.getName());
 
-
-
+    /**
+     * Retrieves all training modules from the repository.
+     *
+     * @return List of all {@link TrainingModule} objects.
+     */
     @Override
     public List<TrainingModule> getAllTrainingModules() {
         return trainingModuleRepository.findAll();
     }
 
+    /**
+     * Fetches a specific training module by its ID.
+     * Throws a runtime exception if the training module is not found.
+     *
+     * @param id The unique identifier of the training module.
+     * @return {@link TrainingModule} object.
+     */
     @Override
     public TrainingModule getTrainingModuleById(Long id) {
         TrainingModule trainingModule = trainingModuleRepository.findById(id)
@@ -45,6 +62,12 @@ public class TrainingModuleServiceImpl implements TrainingModuleService{
         return trainingModule;
     }
 
+    /**
+     * Creates a new training module and stores it in the repository.
+     *
+     * @param trainingModule The training module to be created.
+     * @return The saved {@link TrainingModule} object.
+     */
     @Override
     public TrainingModule createTrainingModule(TrainingModule trainingModule) {
         TrainingModule newTraining = trainingModule;
@@ -53,6 +76,12 @@ public class TrainingModuleServiceImpl implements TrainingModuleService{
         return newTraining;
     }
 
+    /**
+     * Updates a specific training module.
+     * Throws a runtime exception if the training module is not found.
+     *
+     * @param trainingModule The training module to be updated.
+     */
     @Override
     public void updateTrainingModule(TrainingModule trainingModule) {
         TrainingModule originalTraining = trainingModuleRepository.findById(trainingModule.getId())
@@ -64,7 +93,12 @@ public class TrainingModuleServiceImpl implements TrainingModuleService{
         trainingModuleRepository.save(originalTraining);
     }
 
-
+    /**
+     * Deletes a training module with the specified ID.
+     * Throws a runtime exception if the training module is not found.
+     *
+     * @param id The unique identifier of the training module to be deleted.
+     */
     @Override
     public void deleteTrainingModuleById(Long id){
         Optional<TrainingModule> optionalTrainingModule = trainingModuleRepository.findById(id);
@@ -77,6 +111,12 @@ public class TrainingModuleServiceImpl implements TrainingModuleService{
         }
     }
 
+    /**
+     * Retrieves a list of completed training modules for a given employee.
+     *
+     * @param employee The employee whose completed training modules are to be retrieved.
+     * @return List of completed {@link TrainingModule} objects.
+     */
     @Override
     public List<TrainingModule> getCompletedTrainingModulesByEmployee(Employee employee) {
         if(employee == null){
@@ -93,12 +133,23 @@ public class TrainingModuleServiceImpl implements TrainingModuleService{
         return trainingModuleList;
     }
 
+    /**
+     * Marks a specific training module as completed for a given employee.
+     *
+     * @param employee The employee who completed the training module.
+     * @param trainingModule The completed training module.
+     */
     @Override
     public void markTrainingAsCompleted(Employee employee, TrainingModule trainingModule) {
         employee.updateTrainingStatus(trainingModule, true);
         employeeService.updateEmployee(employee);
     }
 
+    /**
+     * Retrieves the currently logged-in user's details.
+     *
+     * @return The {@link Employee} object representing the logged-in user.
+     */
     @Override
     public Employee getLoggedInUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -109,6 +160,15 @@ public class TrainingModuleServiceImpl implements TrainingModuleService{
         return loggedInUser.getEmployee();
     }
 
+    /**
+     * Retrieves a paginated list of training modules sorted based on the given criteria.
+     *
+     * @param pageNo The page number.
+     * @param pageSize The size of the page.
+     * @param sortField The field to sort by.
+     * @param sortDirection The direction of the sort (e.g., "asc" or "desc").
+     * @return A paginated list of {@link TrainingModule} objects.
+     */
     @Override
     public Page<TrainingModule> findPaginated(int pageNo, int pageSize, String sortField, String sortDirection) {
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() : Sort.by(sortField).descending();
@@ -116,12 +176,34 @@ public class TrainingModuleServiceImpl implements TrainingModuleService{
         return this.trainingModuleRepository.findAll(pageable);
     }
 
-
+    /**
+     *
+     * @param spec The specification criteria used to filter training modules.
+     * @param pageable The pagination information.
+     * @return
+     */
     @Override
     public Page<TrainingModule> findFilteredAndPaginated(Specification<TrainingModule> spec, Pageable pageable) {
         return trainingModuleRepository.findAll(spec, pageable);
     }
 
+    /**
+     * Prepares a {@link Specification} for the {@link TrainingModule} based on the given filters.
+     * This specification can then be used with JPA to fetch filtered results from the database.
+     * <p>
+     * The filters can include:
+     * <ul>
+     *   <li>The name of the module</li>
+     *   <li>Whether the training is assigned</li>
+     *   <li>Whether the training is completed</li>
+     * </ul>
+     * </p>
+     *
+     * @param moduleName The name of the training module (partial names are matched).
+     * @param assigned Flag indicating if the training is assigned (can be null).
+     * @param completed Flag indicating if the training is completed (can be null).
+     * @return A {@link Specification} object that can be used to filter {@link TrainingModule} entities.
+     */
     @Override
     public Specification<TrainingModule> prepareSpecification(String moduleName, Boolean assigned, Boolean completed) {
         return (root, query, criteriaBuilder) -> {
@@ -144,6 +226,12 @@ public class TrainingModuleServiceImpl implements TrainingModuleService{
         };
     }
 
+    /**
+     * Assigns a training module to multiple employees based on their IDs.
+     *
+     * @param employeeIds List of employee IDs to whom the training is to be assigned.
+     * @param trainingId The ID of the training module to be assigned.
+     */
     @Transactional
     @Override
     public void assignTraining(List<Long> employeeIds, Long trainingId) {
@@ -156,6 +244,11 @@ public class TrainingModuleServiceImpl implements TrainingModuleService{
         }
     }
 
+    /**
+     * Saves the provided training module in the repository.
+     *
+     * @param training The training module to be saved.
+     */
     @Override
     public void saveTraining(TrainingModule training) {
         trainingModuleRepository.save(training);

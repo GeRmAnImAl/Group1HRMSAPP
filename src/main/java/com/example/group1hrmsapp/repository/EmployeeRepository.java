@@ -18,13 +18,17 @@ import java.util.Optional;
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     /**
      * Retrieves an employee by a specific ID number.
-     *
      * @param id Long representing the employee in the database.
      * @return an Employee Object.
      */
     @Override
     Optional<Employee> findById(Long id);
 
+    /**
+     * Retrieves an Employee associated with a given AppUser.
+     * @param user The AppUser whose associated Employee is to be retrieved.
+     * @return An Optional containing the associated Employee if found, or an empty Optional if not.
+     */
     Optional<Employee> findByAppUser(AppUser user);
 
     /**

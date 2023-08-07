@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Service Implementation class to manage payment-related operations within the HRMS application.
+ */
 @Service
 public class PaymentServiceImpl implements PaymentService{
     @Autowired
@@ -25,11 +28,23 @@ public class PaymentServiceImpl implements PaymentService{
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Retrieves a list of all payments in the system.
+     *
+     * @return List of {@link Payment} objects.
+     */
     @Override
     public List<Payment> getAllPayments(){
         return paymentRepository.findAll();
     }
 
+    /**
+     * Retrieves a payment by its unique identifier.
+     *
+     * @param paymentId The unique identifier of the payment.
+     * @return A {@link Payment} object if found.
+     * @throws RuntimeException if the payment is not found.
+     */
     @Override
     public Payment getPaymentById(Long paymentId) {
         Optional<Payment> optional = paymentRepository.findById(paymentId);
@@ -43,11 +58,22 @@ public class PaymentServiceImpl implements PaymentService{
         return payment;
     }
 
+    /**
+     * Persists the given payment in the system.
+     *
+     * @param payment The payment to be saved.
+     */
     @Override
     public void savePayment(Payment payment) {
         paymentRepository.save(payment);
     }
 
+    /**
+     * Deletes the payment with the given identifier from the system.
+     *
+     * @param paymentId The unique identifier of the payment to be deleted.
+     * @throws RuntimeException if the payment is not found.
+     */
     @Override
     public void deletePaymentById(Long paymentId){
         Optional<Payment> optionalPayment = paymentRepository.findById(paymentId);
@@ -60,6 +86,13 @@ public class PaymentServiceImpl implements PaymentService{
         }
     }
 
+    /**
+     * Processes the payroll for the payment with the given identifier.
+     *
+     * @param paymentId The unique identifier of the payment to be processed.
+     * @return True if the payroll processing was successful.
+     * @throws RuntimeException if the payment is not found.
+     */
     @Override
     public boolean processPayroll(Long paymentId) {
         Payment payment = paymentRepository.findById(paymentId)
@@ -72,6 +105,12 @@ public class PaymentServiceImpl implements PaymentService{
         return true;
     }
 
+    /**
+     * Retrieves the currently logged-in user's associated Employee record.
+     *
+     * @return The associated {@link Employee} object for the currently logged-in user.
+     * @throws RuntimeException if the user is not logged in.
+     */
     @Override
     public Employee getLoggedInUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -82,6 +121,11 @@ public class PaymentServiceImpl implements PaymentService{
         return loggedInUser.getEmployee();
     }
 
+    /**
+     * Archives the provided payment in the system.
+     *
+     * @param payment The payment to be archived.
+     */
     @Transactional
     @Override
     public void archivePayment(Payment payment) {
@@ -97,7 +141,13 @@ public class PaymentServiceImpl implements PaymentService{
         deletePaymentById(payment.getId());
     }
 
-
+    /**
+     * Calculates the total cost for the given payment based on the provided worked hours.
+     *
+     * @param payment     The payment for which the cost is being calculated.
+     * @param workedHours The hours worked by the employee.
+     * @return The calculated cost as a Double value.
+     */
     @Override
     public Double calculateCost(Payment payment, WorkedHours workedHours){
         Double hours = workedHours.getHoursWorked();

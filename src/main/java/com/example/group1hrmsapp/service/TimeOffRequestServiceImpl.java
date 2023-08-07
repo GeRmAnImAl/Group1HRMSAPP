@@ -143,8 +143,6 @@ public class TimeOffRequestServiceImpl implements TimeOffRequestService{
         return timeOffRequestRepository.save(request);
     }
 
-
-
     /**
      * Reject a TimeOffRequest
      * @param requestId of the request to be rejected

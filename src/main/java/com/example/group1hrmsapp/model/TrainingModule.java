@@ -2,10 +2,6 @@ package com.example.group1hrmsapp.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Entity class representing a Training Module in an HRMS application.

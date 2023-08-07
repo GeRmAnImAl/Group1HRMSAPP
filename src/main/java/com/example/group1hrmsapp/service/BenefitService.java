@@ -18,6 +18,16 @@ public interface BenefitService {
      */
     List<Benefit> getAllBenefits();
 
+    /**
+     * Creates and stores a new Benefit entry into the database.
+     * Before adding the benefit, the method checks if the logged-in user
+     * has the necessary privileges to create a benefit by checking their special type.
+     * Only users with the special type "HR" are allowed to create new benefits.
+     *
+     * @param benefit The benefit object to be saved into the database.
+     * @throws RuntimeException If no user is currently logged in or if the logged-in user
+     *                          doesn't have the HR special type.
+     */
     void createBenefit(Benefit benefit);
 
     /**
@@ -45,7 +55,18 @@ public interface BenefitService {
      */
     void deleteBenefitById(Long id);
 
+    /**
+     * Enrolls an employee to a specific benefit using the benefit's ID.
+     * @param benefitId The unique identifier of the benefit to enroll in.
+     * @return true if the enrollment was successful, false otherwise.
+     */
     boolean enrollInBenefit(Long benefitId);
+
+    /**
+     * Withdraws an employee from a specific benefit using the benefit's ID.
+     * @param benefitId The unique identifier of the benefit to withdraw from.
+     * @return true if the withdrawal was successful, false otherwise.
+     */
     boolean withdrawFromBenefit(Long benefitId);
 
     /**
@@ -58,9 +79,27 @@ public interface BenefitService {
      */
     Page<Benefit> findPaginated(int pageNo, int pageSize, String sortField, String sortDirection);
 
-
+    /**
+     * Retrieves a paginated list of benefits that meet the given specification criteria.
+     * @param spec      The specification criteria used to filter benefits.
+     * @param pageable  The pagination information including page size and sort order.
+     * @return A paginated list of benefits that meet the given specification criteria.
+     */
     Page<Benefit> findFilteredAndPaginated(Specification<Benefit> spec, Pageable pageable);
 
+    /**
+     * Prepares a specification for filtering Benefit based on the provided parameters.
+     * @param coverageType     The type of coverage (e.g. HEALTH, DENTAL, VISION, etc.).
+     * @param benefitName      The name of the benefit.
+     * @param cost             The cost associated with the benefit.
+     * @param coverageProvider The provider offering the coverage (e.g. AETNA, HUMANA, etc.).
+     * @return A specification that can be used to filter benefits based on the given criteria.
+     */
     Specification<Benefit> prepareSpecification(String coverageType, String benefitName, Double cost, String coverageProvider);
+
+    /**
+     * Retrieves the currently logged-in Employee.
+     * @return An Employee object representing the currently logged-in user.
+     */
     Employee getLoggedInUser();
 }

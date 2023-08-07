@@ -382,7 +382,6 @@ public class Employee implements Serializable, Observer {
         this.specialType = specialType;
     }
 
-
     /**
      * Retrieves the access level of this HR professional.
      * @return The access level of this HR professional.
@@ -415,10 +414,18 @@ public class Employee implements Serializable, Observer {
         this.subordinates = subordinates;
     }
 
+    /**
+     * Retrieves the list of benefits along with their associated dates.
+     * @return A map where the key is the benefit and the value is the associated date.
+     */
     public Map<Benefit, LocalDate> getBenefitList() {
         return benefitList;
     }
 
+    /**
+     * Sets the list of benefits along with their associated dates.
+     * @param benefitList A map where the key is the benefit and the value is the associated date.
+     */
     public void setBenefitList(Map<Benefit, LocalDate> benefitList) {
         this.benefitList = benefitList;
     }
@@ -433,11 +440,19 @@ public class Employee implements Serializable, Observer {
         System.out.println("Manager " + getId() + " notified about request: " + timeOffRequest.getId());
     }
 
+    /**
+     * Adds an employee to the list of subordinates and sets this instance as the manager for the employee.
+     * @param employee The employee to be added as a subordinate.
+     */
     public void addSubordinate(Employee employee) {
         this.subordinates.add(employee);
         employee.setManager(this);
     }
 
+    /**
+     * Removes an employee from the list of subordinates.
+     * @param employee The employee to be removed from the list of subordinates.
+     */
     public void removeSubordinate(Employee employee){
         this.subordinates.remove(employee);
     }

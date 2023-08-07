@@ -66,6 +66,11 @@ public class EmployeeController {
         return "redirect:/employeeList";
     }
 
+    /**
+     * Handles the POST request for updating an employee's information.
+     * @param employee the {@link Employee} object populated with the updated data from the form
+     * @return a string indicating where the user should be redirected post-operation
+     */
     @PostMapping("/updateEmployee")
     public String updateEmployee(@ModelAttribute("employee") Employee employee){
 
@@ -128,6 +133,15 @@ public class EmployeeController {
         return "employee_list";
     }
 
+    /**
+     * Initializes data binder for web requests, allowing for custom property editors.
+     * <p>
+     * This particular binder helps convert incoming string-based manager IDs into
+     * actual {@link Employee} manager objects.
+     * </p>
+     *
+     * @param binder the data binder used to bind web request parameters
+     */
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Employee.class, "manager", new PropertyEditorSupport() {

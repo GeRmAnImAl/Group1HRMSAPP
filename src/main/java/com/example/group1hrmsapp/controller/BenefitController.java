@@ -14,6 +14,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+/**
+ * Controller that handles web requests related to benefits.
+ */
 @Controller
 public class BenefitController {
     @Autowired
@@ -22,9 +25,9 @@ public class BenefitController {
     private UserRepository userRepository;
 
     /**
-     * Handler for the GET request to get all Benefits.
-     * @param model the model to hold attributes for the view.
-     * @return the name of the view.
+     * Retrieves the list of all benefits for viewing.
+     * @param model the Spring model to hold attributes for the view.
+     * @return the name of the view displaying the list of benefits.
      */
     @GetMapping("/benefitsList")
     public String viewBenefitPage(Model model){
@@ -35,6 +38,11 @@ public class BenefitController {
         return "benefit_list";
     }
 
+    /**
+     * Displays the form for creating a new benefit.
+     * @param model the Spring model to hold attributes for the view.
+     * @return the name of the view for creating a new benefit.
+     */
     @GetMapping("/showBenefitsForm")
     public String createBenefit(Model model) {
         Benefit benefit = new Benefit();
@@ -42,12 +50,23 @@ public class BenefitController {
         return "new_benefit";
     }
 
+    /**
+     * Saves a new benefit.
+     * @param benefit the benefit object to be saved.
+     * @return redirects to the benefits list view.
+     */
     @PostMapping("/saveBenefit")
     public String saveBenefit(@ModelAttribute("benefit") Benefit benefit){
         benefitService.createBenefit(benefit);
         return "redirect:/benefitsList";
     }
 
+    /**
+     * Handles enrolling in a specific benefit.
+     * @param benefitId the ID of the benefit to enroll in.
+     * @param model     the Spring model to hold attributes for the view.
+     * @return the name of the view displaying the result of the enrollment action.
+     */
     @GetMapping("/enrollInBenefit/{benefitId}")
     public String enrollInBenefit(@PathVariable Long benefitId, Model model) {
         boolean result = benefitService.enrollInBenefit(benefitId);
@@ -55,6 +74,12 @@ public class BenefitController {
         return "enroll_or_withdraw_benefit_result";
     }
 
+    /**
+     * Handles withdrawing from a specific benefit.
+     * @param benefitId the ID of the benefit to withdraw from.
+     * @param model     the Spring model to hold attributes for the view.
+     * @return the name of the view displaying the result of the withdrawal action.
+     */
     @GetMapping("/withdrawFromBenefit/{benefitId}")
     public String withdrawFromBenefit(@PathVariable Long benefitId, Model model) {
         boolean result = benefitService.withdrawFromBenefit(benefitId);
@@ -62,18 +87,38 @@ public class BenefitController {
         return "enroll_or_withdraw_benefit_result";
     }
 
+    /**
+     * Deletes a specific benefit.
+     * @param id the ID of the benefit to delete.
+     * @return redirects to the benefits list view.
+     */
     @GetMapping("/deleteBenefit/{id}")
     public String deleteBenefit(@PathVariable(value = "id") Long id){
         this.benefitService.deleteBenefitById(id);
         return "redirect:/benefitsList";
     }
 
+    /**
+     * Displays a specific benefit.
+     * @param benefitId the ID of the benefit to display.
+     * @param model     the Spring model to hold attributes for the view.
+     * @return the name of the view displaying the specific benefit.
+     */
     @GetMapping("/benefitDisplay/{benefitId}")
     public String benefitDisplay(@PathVariable Long benefitId, Model model){
         model.addAttribute(benefitService.getBenefitById(benefitId));
         return "display_benefit";
     }
 
+    /**
+     * Filters the benefits based on various parameters.
+     * @param coverageType    the type of coverage of the benefit.
+     * @param benefitName     the name of the benefit.
+     * @param benefitCost     the cost of the benefit.
+     * @param coverageProvider the provider of the benefit coverage.
+     * @param model           the Spring model to hold attributes for the view.
+     * @return the name of the view displaying the list of filtered benefits.
+     */
     @PostMapping("/filterBenefits")
     public String filterBenefits(
             @RequestParam(name = "coverageType", required = false) String coverageType,
@@ -108,10 +153,13 @@ public class BenefitController {
         return "benefit_list";
     }
 
+    /**
+     * Clears the currently set benefit filters.
+     * @param redirectAttributes attributes to be passed as parameters in a redirect scenario.
+     * @return redirects to the benefits list view.
+     */
     @GetMapping("/clearBenefitsFilters")
     public String clearFilters(RedirectAttributes redirectAttributes) {
-        // Redirect to the filter page after clearing the filters
-        // You can set any default filter values you want here
         redirectAttributes.addAttribute("coverageType", "");
         redirectAttributes.addAttribute("benefitName", "");
         redirectAttributes.addAttribute("cost", "");
