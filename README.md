@@ -66,6 +66,30 @@ can approve or reject them. Only the employee who created the worked hours can c
 
 Currently, all users can view all submitted worked hours.
 
+## Benefits and Payroll Functionality
+Employees can now select benefits which they wish to enroll into. HR can create, update, and delete benefits.
+
+Benefits range from healthcare to special employee perks. Employees should keep in mind that benefits
+
+cost money each paycheck. This is highlighted as part of the new payroll functionality. Managers can now pay
+
+employees based on their worked hours input into the system. The system calculates payroll based on hours worked,
+
+employee compensation amount, and enrolled benefits cost. We don't believe in taxes, so they have been omitted
+
+until the IRS catches on!
+
+## Training and Development Functionality
+Employees can now be trained! Users with the specialType HR can now create, update, and delete
+
+training modules. Users with the specialType MANAGER can assign trainings to employees, and all
+
+users can complete trainings. Trainings are informational and require users acknowledge that they read
+
+and understand the training before they can mark it as completed. The system will track both assigned and
+
+completed trainings for each employee.
+
 # Implement Two Patterns
 ## AJ Germani
 I chose to implement the Observer OOP Design Pattern using the Manager and TimeOffRequest
