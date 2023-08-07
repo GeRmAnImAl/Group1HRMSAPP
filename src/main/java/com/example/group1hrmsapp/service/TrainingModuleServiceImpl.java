@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.criteria.Predicate;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Service implementation for managing training module operations.
@@ -208,18 +209,35 @@ public class TrainingModuleServiceImpl implements TrainingModuleService{
     public Specification<TrainingModule> prepareSpecification(String moduleName, Boolean assigned, Boolean completed) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
+            Employee loggedInEmployee = getLoggedInUser();
+            Map<TrainingModule, Boolean> assignedTrainings = loggedInEmployee.getAssignedTrainings();
 
             if(moduleName != null && !moduleName.isEmpty()){
                 String partialTrainingName = "%" + moduleName + "%";
                 predicates.add(criteriaBuilder.like(root.get("moduleName"), moduleName));
             }
 
-            if (assigned != null) {
-                predicates.add(criteriaBuilder.equal(root.get("assigned"), assigned));
+            if (assigned != null && assignedTrainings != null) {
+                if (assigned) {
+                    predicates.add(root.in(assignedTrainings.keySet()));
+                } else {
+                    predicates.add(criteriaBuilder.not(root.in(assignedTrainings.keySet())));
+                }
             }
 
-            if (completed != null) {
-                predicates.add(criteriaBuilder.equal(root.get("completed"), completed));
+            if (completed != null && assignedTrainings != null) {
+                Set<TrainingModule> completedTrainings = assignedTrainings.entrySet().stream()
+                        .filter(entry -> entry.getValue().equals(completed))
+                        .map(Map.Entry::getKey)
+                        .collect(Collectors.toSet());
+
+                if (!completedTrainings.isEmpty()) {
+                    predicates.add(root.in(completedTrainings));
+                } else {
+                    // In case there are no trainings matching the 'completed' criteria,
+                    // we add a predicate that always evaluates to false
+                    predicates.add(criteriaBuilder.disjunction());
+                }
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
