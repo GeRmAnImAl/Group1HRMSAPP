@@ -5,7 +5,6 @@
         integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
   <meta charset="UTF-8">
   <title>Human Resource Management System</title>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -23,32 +22,11 @@
         <textarea id="moduleInfo" th:field="*{moduleInfo}"
                   class="form-control mb-4 col-4" rows="4" required></textarea>
 
-        <label for="numQuestions" class="form-label">Number of Questions:</label>
-        <input type="number" id="numQuestions" class="form-control mb-4 col-4">
-
-        <div id="qa-container"></div>
-
         <button type="submit" class="btn btn-info col-2">Save</button>
         <a href="#" th:href="@{/trainingsList}" class="btn btn-danger col-2 ml-2">Cancel</a>
       </div>
     </div>
   </form>
-
-  <script>
-    $(document).ready(function(){
-      $('#numQuestions').change(function(){
-        var numQuestions = $(this).val();
-        $('#qa-container').empty();
-
-        for(let i=0; i<numQuestions; i++){
-          var questionHTML = '<div class="mt-4"><label for="question'+ i +'">Question ' + (i+1) + '</label><input type="text" id="question'+ i +'" name="quiz[question'+ i +']" class="form-control mb-4 col-4"></div>';
-          var answerHTML = '<div class="mt-4"><label for="answer'+ i +'">Answer ' + (i+1) + '</label><input type="text" id="answer'+ i +'" name="quiz[answer'+ i +']" class="form-control mb-4 col-4"></div>';
-          $('#qa-container').append(questionHTML + answerHTML);
-        }
-      });
-    });
-  </script>
-
 </div>
 </body>
 </html>

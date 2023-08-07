@@ -1,5 +1,6 @@
 package com.example.group1hrmsapp.service;
 
+import com.example.group1hrmsapp.controller.TrainingModuleController;
 import com.example.group1hrmsapp.model.*;
 import com.example.group1hrmsapp.repository.TrainingModuleRepository;
 import com.example.group1hrmsapp.repository.UserRepository;
@@ -12,9 +13,11 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.Predicate;
 import java.util.*;
+import java.util.logging.Logger;
 
 @Service
 public class TrainingModuleServiceImpl implements TrainingModuleService{
@@ -24,6 +27,9 @@ public class TrainingModuleServiceImpl implements TrainingModuleService{
     private UserRepository userRepository;
     @Autowired
     private EmployeeService employeeService;
+
+    private static final Logger LOGGER = Logger.getLogger(TrainingModuleController.class.getName());
+
 
 
     @Override
@@ -35,6 +41,7 @@ public class TrainingModuleServiceImpl implements TrainingModuleService{
     public TrainingModule getTrainingModuleById(Long id) {
         TrainingModule trainingModule = trainingModuleRepository.findById(id)
                 .orElseThrow(()-> new RuntimeException("Training Module not found for id :: " + id));
+        LOGGER.info("Module ID from ServiceImpl: " + trainingModule.getId());
         return trainingModule;
     }
 
@@ -53,17 +60,6 @@ public class TrainingModuleServiceImpl implements TrainingModuleService{
 
         originalTraining.setModuleName(trainingModule.getModuleName());
         originalTraining.setModuleInfo(trainingModule.getModuleInfo());
-
-        // Reconstruct the quiz map
-        Map<String, String> newQuiz = new HashMap<>();
-        List<String> questions = trainingModule.getQuestions();
-        List<String> answers = trainingModule.getAnswers();
-
-        for (int i = 0; i < questions.size(); i++) {
-            newQuiz.put(questions.get(i), answers.get(i));
-        }
-
-        originalTraining.setQuiz(newQuiz);
 
         trainingModuleRepository.save(originalTraining);
     }
@@ -100,7 +96,7 @@ public class TrainingModuleServiceImpl implements TrainingModuleService{
     @Override
     public void markTrainingAsCompleted(Employee employee, TrainingModule trainingModule) {
         employee.updateTrainingStatus(trainingModule, true);
-
+        employeeService.updateEmployee(employee);
     }
 
     @Override
@@ -148,6 +144,7 @@ public class TrainingModuleServiceImpl implements TrainingModuleService{
         };
     }
 
+    @Transactional
     @Override
     public void assignTraining(List<Long> employeeIds, Long trainingId) {
         TrainingModule trainingModule = this.getTrainingModuleById(trainingId);
@@ -155,7 +152,7 @@ public class TrainingModuleServiceImpl implements TrainingModuleService{
         for(Long id : employeeIds){
             Employee employee = employeeService.getEmployeeById(id);
             employee.getAssignedTrainings().put(trainingModule, false);
-            employeeService.saveEmployee(employee);
+            employeeService.updateEmployee(employee);
         }
     }
 

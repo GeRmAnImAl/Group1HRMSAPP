@@ -4,8 +4,6 @@ import com.example.group1hrmsapp.model.Employee;
 import com.example.group1hrmsapp.model.TrainingModule;
 import com.example.group1hrmsapp.service.EmployeeService;
 import com.example.group1hrmsapp.service.TrainingModuleService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,11 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 @Controller
@@ -56,25 +50,7 @@ public class TrainingModuleController {
     }
 
     @PostMapping("/updateTrainingModule")
-    public String updateTrainingModule(@ModelAttribute("training") TrainingModule training, HttpServletRequest request){
-        Map<String, String> quiz = new HashMap<>();
-
-        // Iterate over the request parameters and add question-answer pairs to the map
-        Enumeration<String> paramNames = request.getParameterNames();
-        while (paramNames.hasMoreElements()) {
-            String paramName = paramNames.nextElement();
-
-            if (paramName.startsWith("quiz[question")) {
-                String questionNumber = paramName.substring(12, paramName.length() - 1);  // Extract the question number from the parameter name
-                String question = request.getParameter(paramName);
-                String answer = request.getParameter("quiz[answer" + questionNumber + "]");
-
-                quiz.put(question, answer);
-            }
-        }
-
-        // Now update the trainingModule with the new quiz map
-        training.setQuiz(quiz);
+    public String updateTrainingModule(@ModelAttribute("training") TrainingModule training){
 
         trainingModuleService.updateTrainingModule(training);
         return "redirect:/trainingsList";
@@ -84,18 +60,7 @@ public class TrainingModuleController {
     public String showUpdateTrainingForm(@PathVariable(value = "trainingId") Long trainingId, Model model){
         TrainingModule trainingModule = trainingModuleService.getTrainingModuleById(trainingId);
 
-        // Convert the quiz map to a JSON string
-        ObjectMapper mapper = new ObjectMapper();
-        String quizJson = "";
-        try {
-            quizJson = mapper.writeValueAsString(trainingModule.getQuiz());
-            LOGGER.info(quizJson);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
         model.addAttribute("trainingModule", trainingModule);
-        model.addAttribute("quizJson", quizJson);
         return "update_training";
     }
 
@@ -126,8 +91,23 @@ public class TrainingModuleController {
 
     @GetMapping("/trainingDisplay/{trainingId}")
     public String trainingDisplay(@PathVariable Long trainingId, Model model){
-        model.addAttribute(trainingModuleService.getTrainingModuleById(trainingId));
+        model.addAttribute("training", trainingModuleService.getTrainingModuleById(trainingId));
         return "display_training";
+    }
+
+    @PostMapping("/markTrainingComplete")
+    public String markTrainingComplete(
+            @RequestParam(value = "confirmRead", defaultValue = "false") Boolean confirmRead,
+            @RequestParam("trainingId") Long trainingId) {
+        LOGGER.info("trainingID: " + trainingId);
+        LOGGER.info("confirmRead: " + confirmRead);
+        if(!confirmRead){
+            return "redirect:/trainingDisplay/" + trainingId;
+        }
+        Employee loggedInEmployee = trainingModuleService.getLoggedInUser();
+        TrainingModule trainingModule = trainingModuleService.getTrainingModuleById(trainingId);
+        trainingModuleService.markTrainingAsCompleted(loggedInEmployee,trainingModule);
+        return "redirect:/trainingsList";
     }
 
     @PostMapping("/filterTrainings")

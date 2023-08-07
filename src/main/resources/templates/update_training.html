@@ -5,7 +5,6 @@
         integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
   <meta charset="UTF-8">
   <title>Human Resource Management System</title>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -26,57 +25,11 @@
         <textarea id="moduleInfo" th:field="*{moduleInfo}"
                   class="form-control mb-4 col-4" rows="4" required></textarea>
 
-        <div id="qa-container"></div>
-
-        <button type="button" id="addQuestionBtn" class="btn btn-info mt-2 mb-4">Add Question</button>
         <button type="submit" class="btn btn-info col-2">Save</button>
         <a href="#" th:href="@{/trainingsList}" class="btn btn-danger col-2 ml-2">Cancel</a>
       </div>
     </div>
   </form>
-
-  <script th:inline="javascript">
-    $(document).ready(function(){
-      let quizJson = /*[[${quizJson}]]*/ '[[${#jsonStringify(quizJson)}]]'; // Get the JSON string from Thymeleaf
-
-      // Convert the JSON string into a JavaScript object
-      let quizObj = JSON.parse(quizJson);
-
-      let numQuestions = Object.keys(quizObj).length; // Get the number of questions in the object
-
-      // Iterate over the quiz object to dynamically create question and answer fields
-      for (let i = 0; i < numQuestions; i++) {
-        addQuestionAnswerPair(i, quizObj['question' + i], quizObj['answer' + i]);
-      }
-
-      // Add click handler for 'Add Question' button
-      $('#addQuestionBtn').click(function(){
-        addQuestionAnswerPair(numQuestions++);
-      });
-
-      // Add submit handler for the form
-      $('#myForm').submit(function() {
-        // Clear the existing questions and answers
-        $('#questions').val('');
-        $('#answers').val('');
-
-        // Update the questions and answers hidden fields with the current data
-        for (let i = 0; i < numQuestions; i++) {
-          let question = $('#question' + i).val();
-          let answer = $('#answer' + i).val();
-          $('#questions').val($('#questions').val() + question + ',');
-          $('#answers').val($('#answers').val() + answer + ',');
-
-        }
-      });
-
-      function addQuestionAnswerPair(i, question = '', answer = '') {
-        let questionHTML = '<div class="mt-4"><label for="question'+ i +'">Question ' + (i+1) + '</label><input type="text" id="question'+ i +'" name="quiz[question'+ i +']" value="'+ question +'" class="form-control mb-4 col-4"></div>';
-        let answerHTML = '<div class="mt-4"><label for="answer'+ i +'">Answer ' + (i+1) + '</label><input type="text" id="answer'+ i +'" name="quiz[answer'+ i +']" value="'+ answer +'" class="form-control mb-4 col-4"></div>';
-        $('#qa-container').append(questionHTML + answerHTML);
-      }
-    });
-  </script>
 </div>
 </body>
 </html>

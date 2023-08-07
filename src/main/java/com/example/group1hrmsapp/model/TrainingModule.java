@@ -22,15 +22,7 @@ public class TrainingModule implements Serializable {
     private String moduleName;
     @Column(name = "module_info", columnDefinition = "TEXT")
     private String moduleInfo;
-    @ElementCollection
-    @MapKeyColumn(name="question")
-    @Column(name="answer")
-    @CollectionTable(name="quiz", joinColumns=@JoinColumn(name="module_id"))
-    private Map<String, String> quiz = new HashMap<>();
-    @Transient
-    private List<String> questions = new ArrayList<>();
-    @Transient
-    private List<String> answers = new ArrayList<>();
+
 
     /**
      * Default constructor.
@@ -83,46 +75,5 @@ public class TrainingModule implements Serializable {
      */
     public void setModuleInfo(String moduleInfo) {
         this.moduleInfo = moduleInfo;
-    }
-
-    /**
-     * Retrieves the quiz of the Training Module.
-     * @return A Map containing the quiz of the Training Module.
-     */
-    public Map<String, String> getQuiz() {
-        return quiz;
-    }
-
-    /**
-     * Sets the quiz of the Training Module.
-     * @param quiz A Map containing the quiz of the Training Module.
-     */
-    public void setQuiz(Map<String, String> quiz) {
-        this.quiz = quiz;
-    }
-
-    /**
-     * Adds a question and its corresponding answer to the quiz of the Training Module.
-     * @param question A String containing the question to be added to the quiz.
-     * @param answer A String containing the answer to the question.
-     */
-    public void addQuestionAnswer(String question, String answer) {
-        this.quiz.put(question, answer);
-    }
-
-    public List<String> getQuestions() {
-        return questions;
-    }
-
-    public void setQuestions(List<String> questions) {
-        this.questions = questions;
-    }
-
-    public List<String> getAnswers() {
-        return answers;
-    }
-
-    public void setAnswers(List<String> answers) {
-        this.answers = answers;
     }
 }
