@@ -17,7 +17,7 @@ Our first usecase is CRUD functionality for Employee Records.
 You will be able to add, modify, and delete Employees. The data is stored in a database
 
 hosted on AWS so there is no need to create an instance on your own machine.
-
+# Use Case 1: Manage Employee Data
 ## User Account Creation
 User accounts are dynamically created when a new employee is created. The convention used
 
@@ -48,6 +48,7 @@ the user is associated with. This functionality is necessary for the time off re
 
 as features planned for the future.
 
+# Use Case 2: Track Time and Attendance
 ## Time Off Request Functionality
 Any user with an employee ID can create a time off request. Only the assigned manager for the
 
@@ -66,6 +67,7 @@ can approve or reject them. Only the employee who created the worked hours can c
 
 Currently, all users can view all submitted worked hours.
 
+# Use Case 3: Manage Payroll and Benefits
 ## Benefits and Payroll Functionality
 Employees can now select benefits which they wish to enroll into. HR can create, update, and delete benefits.
 
@@ -78,7 +80,7 @@ employees based on their worked hours input into the system. The system calculat
 employee compensation amount, and enrolled benefits cost. We don't believe in taxes, so they have been omitted
 
 until the IRS catches on!
-
+# Use Case 4: Manage Training and Development
 ## Training and Development Functionality
 Employees can now be trained! Users with the specialType HR can now create, update, and delete
 
